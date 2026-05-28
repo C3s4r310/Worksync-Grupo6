@@ -1,19 +1,33 @@
 package com.worksync.worksync.Servicio;
 
-import org.springframework.stereotype.Service;
+import com.worksync.worksync.DAO.userDAO;
 import com.worksync.worksync.DTO.LoginRequestDTO;
+import com.worksync.worksync.model.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class authSERVICIO {
 
+    @Autowired
+    private userDAO userDAO;
+
     public String login(LoginRequestDTO credenciales) {
-        // 1. Buscar usuario por correo en la BD
-        // 2. Comparar la contraseña ingresada con la encriptada
-        // 3. Si es correcto, generar el Token JWT
-        
-        if (credenciales.getCorreo().equals("admin@worksync.com") && credenciales.getContrasena().equals("123")) {
-            return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (Token Simulado)";
+
+        Usuario usuario = userDAO
+                .findByCorreo(credenciales.getCorreo())
+                .orElse(null);
+
+        if(usuario == null){
+            throw new RuntimeException("Usuario no encontrado");
         }
-        throw new RuntimeException("Credenciales inválidas");
+
+        if(!usuario.getContrasena()
+                .equals(credenciales.getContrasena())){
+
+            throw new RuntimeException("Contraseña incorrecta");
+        }
+
+        return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (Token Simulado)";
     }
 }
