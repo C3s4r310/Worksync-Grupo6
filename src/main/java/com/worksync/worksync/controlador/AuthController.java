@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.worksync.worksync.Servicio.authSERVICIO;
 import com.worksync.worksync.DTO.LoginRequestDTO;
+import com.worksync.worksync.DTO.RegisterRequestDTO;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -16,16 +17,25 @@ public class AuthController {
     @Autowired
     private authSERVICIO authServicio;
 
-    // RF01: Inicio de sesión
+    // LOGIN
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO credenciales) {
-        // Aquí validarás con JWT y devolverás el token
-        return new ResponseEntity<>("Token_JWT_Generado_Aqui", HttpStatus.OK);
+    public ResponseEntity<?> login(
+            @RequestBody LoginRequestDTO credenciales
+    ) {
+
+        String respuesta = authServicio.login(credenciales);
+
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
-    // RF01: Registro de usuario
+    // REGISTER
     @PostMapping("/registro")
-    public ResponseEntity<?> registrar(@RequestBody Object registroDTO) {
-        return new ResponseEntity<>("Usuario registrado correctamente", HttpStatus.CREATED);
+    public ResponseEntity<?> registrar(
+            @RequestBody RegisterRequestDTO registroDTO
+    ) {
+
+        String respuesta = authServicio.register(registroDTO);
+
+        return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
     }
 }
