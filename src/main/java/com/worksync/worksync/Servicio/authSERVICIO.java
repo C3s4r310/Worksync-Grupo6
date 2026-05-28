@@ -31,3 +31,19 @@ public class authSERVICIO {
         return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (Token Simulado)";
     }
 }
+
+ // REGISTER
+    public String register(RegisterRequestDTO request){
+
+        Usuario usuario = new Usuario();
+
+        usuario.setNombre(request.getNombre());
+        usuario.setCorreo(request.getCorreo());
+        usuario.setContrasena(request.getContrasena());
+        usuario.setRol("COLABORADOR");
+
+        userDAO.save(usuario);
+
+        return "Usuario registrado correctamente";
+    }
+}
