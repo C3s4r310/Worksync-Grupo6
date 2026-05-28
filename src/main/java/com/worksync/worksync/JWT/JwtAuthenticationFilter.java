@@ -1,28 +1,51 @@
 package com.worksync.worksync.JWT;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.security.Key;
-import java.util.Date;
+import java.io.IOException;
+import java.util.ArrayList;
 
-public class JwtUtil {
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final String SECRET =
-            "worksyncsecretkeyworksyncsecretkey";
+    @Autowired
+    private JwtUtil jwtUtil;
 
-    private static final Key KEY =
-            Keys.hmacShaKeyFor(SECRET.getBytes());
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-    public static String generarToken(String correo){
+        String authHeader = request.getHeader("Authorization");
 
-        return Jwts.builder()
-                .setSubject(correo)
-                .setIssuedAt(new Date())
-                .setExpiration(
-                        new Date(System.currentTimeMillis() + 86400000)
-                )
-                .signWith(KEY)
-                .compact();
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+
+            try {
+                String correo = jwtUtil.extraerCorreo(token);
+
+                if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    if (jwtUtil.tokenEsValido(token)) {
+                        UsernamePasswordAuthenticationToken authToken =
+                                new UsernamePasswordAuthenticationToken(correo, null, new ArrayList<>());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
+                }
+            } catch (Exception e) {
+                // Token inválido — se deja pasar sin autenticar
+            }
+        }
+
+        filterChain.doFilter(request, response);
     }
 }

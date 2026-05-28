@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import com.worksync.worksync.Servicio.authSERVICIO;
 import com.worksync.worksync.DTO.LoginRequestDTO;
 import com.worksync.worksync.DTO.RegisterRequestDTO;
-import com.worksync.worksync.JWT.JwtUtil;
 
 @RestController
 @RequestMapping("/api/auth")

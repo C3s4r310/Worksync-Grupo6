@@ -3,6 +3,7 @@ package com.worksync.worksync.Servicio;
 import com.worksync.worksync.DAO.userDAO;
 import com.worksync.worksync.DTO.LoginRequestDTO;
 import com.worksync.worksync.DTO.RegisterRequestDTO;
+import com.worksync.worksync.JWT.JwtUtil;
 import com.worksync.worksync.model.Usuario;
 
 import org.springframework.beans.factory.annotation.Autowired;
