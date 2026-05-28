@@ -37,7 +37,7 @@ public class authSERVICIO {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
-        return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (Token Simulado)";
+        return JwtUtil.generarToken(usuario.getCorreo());
     }
 
     // REGISTER
