@@ -16,45 +16,31 @@ public class authSERVICIO {
     @Autowired
     private userDAO userDAO;
 
-    private BCryptPasswordEncoder passwordEncoder =
-            new BCryptPasswordEncoder();
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // LOGIN
     public String login(LoginRequestDTO credenciales) {
-
         Usuario usuario = userDAO
                 .findByCorreo(credenciales.getCorreo())
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        if(usuario == null){
-            throw new RuntimeException("Usuario no encontrado");
-        }
-
-        // BCrypt
-        if(!passwordEncoder.matches(
-                credenciales.getContrasena(),
-                usuario.getContrasena()
-        )){
+        if (!passwordEncoder.matches(credenciales.getContrasena(), usuario.getContrasena())) {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
-        return JwtUtil.generarToken(usuario.getCorreo());
+        // Llamada de instancia, no estática
+        return jwtUtil.generarToken(usuario.getCorreo());
     }
 
     // REGISTER
-    public String register(RegisterRequestDTO request){
-
+    public String register(RegisterRequestDTO request) {
         Usuario usuario = new Usuario();
         usuario.setNombre(request.getNombre());
         usuario.setCorreo(request.getCorreo());
-
-        // BCrypt
-        usuario.setContrasena(
-                passwordEncoder.encode(
-                        request.getContrasena()
-                )
-        );
-
+        usuario.setContrasena(passwordEncoder.encode(request.getContrasena()));
         usuario.setRol("COLABORADOR");
 
         userDAO.save(usuario);
