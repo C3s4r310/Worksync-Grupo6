@@ -2,24 +2,9 @@ import { useState } from 'react';
 import './tareas.css';
 import TareasPage from './pages/TareasPage';
 import ProyectosPage from './pages/ProyectosPage';
-import Login from './pages/Login'; 
 
 function App() {
   const [vistaActual, setVistaActual] = useState<'tareas' | 'proyectos'>('tareas');
-  
-  // Monitoreamos el token directamente del almacenamiento del navegador
-  const [token, setToken] = useState<string | null>(sessionStorage.getItem('token'));
-
-  // Función interna para cerrar sesión de manera limpia
-  const manejarLogout = () => {
-    sessionStorage.removeItem('token');
-    setToken(null);
-  };
-
-  // Si el usuario no está autenticado, renderizamos la pantalla de Login integrada
-  if (!token) {
-    return <Login />;
-  }
 
   return (
     // RNF-03
@@ -80,30 +65,6 @@ function App() {
             </button>
           </div>
         </div>
-
-        {/* Botón de Cerrar Sesión: Añade funcionalidad real al flujo sin romper nada */}
-        <button
-          onClick={manejarLogout}
-          style={{
-            backgroundColor: 'transparent',
-            color: '#ef4444', // Tono rojo pastel suave para evitar estridencias
-            border: '1px solid rgba(239, 68, 68, 0.3)',
-            borderRadius: '6px',
-            padding: '6px 14px',
-            fontSize: '14px',
-            cursor: 'pointer',
-            fontWeight: '500',
-            transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-          }}
-        >
-          Cerrar sesión
-        </button>
       </nav>
 
       {/* Área de Contenido Principal */}
