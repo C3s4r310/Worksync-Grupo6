@@ -31,3 +31,25 @@ export const PRIORIDAD_CONFIG: Record<Prioridad, { label: string; color: string;
   ALTA:    { label: 'Alta',    color: '#f44336', bg: '#ffebee' },
   CRITICA: { label: 'Crítica', color: '#7b1fa2', bg: '#f3e5f5' },
 };
+
+// --- LO NUEVO PARA TUS FILTROS (RF-24) ---
+
+// Interfaz para la respuesta paginada de Spring Boot
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
+// Interfaz para agrupar los datos que el usuario escriba en el buscador
+export interface FiltrosTarea {
+  estado?: string;
+  prioridad?: string;
+  responsable?: string;
+  fechaLimite?: string;
+  palabraClave?: string;
+  page?: number;
+  size?: number;
+}

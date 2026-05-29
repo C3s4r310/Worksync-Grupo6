@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import type { Tarea, TareaRequest } from '../../types/tarea';
+import type { Tarea, TareaRequest, FiltrosTarea } from '../../types/tarea';
 import {
   listarTareasPorProyecto,
   crearTarea,
   actualizarTarea,
   eliminarTarea,
   cambiarEstadoTarea,
+  buscarTareas,
 } from '../../services/tareaService';
 import TareaCard from './TareaCard';
 import TareaForm from './TareaForm';
@@ -13,6 +14,7 @@ import TareaForm from './TareaForm';
 interface TareaBoardProps {
   proyectoId: number;
   nombreProyecto: string;
+  filtros?: FiltrosTarea; // Recibe los filtros desde el padre
 }
 
 // Columnas del tablero Kanban
@@ -23,23 +25,34 @@ const COLUMNAS = [
   { estado: 'COMPLETADA',   label: 'Completado' },
 ];
 
-export default function TareaBoard({ proyectoId, nombreProyecto }: TareaBoardProps) {
+export default function TareaBoard({ proyectoId, nombreProyecto, filtros }: TareaBoardProps) {
   const [tareas, setTareas]           = useState<Tarea[]>([]);
   const [cargando, setCargando]       = useState(true);
   const [error, setError]             = useState('');
   const [mostrarForm, setMostrarForm] = useState(false);
   const [tareaEditar, setTareaEditar] = useState<Tarea | null>(null);
 
-  // Carga las tareas del proyecto al montar el componente
+  // Carga las tareas cuando cambia el proyecto o cuando cambian los filtros
   useEffect(() => {
     cargarTareas();
-  }, [proyectoId]);
+  }, [proyectoId, filtros]);
 
   const cargarTareas = async () => {
     try {
       setCargando(true);
-      const data = await listarTareasPorProyecto(proyectoId);
-      setTareas(data);
+      
+      // Verificamos si el usuario aplicó algún filtro
+      const hayFiltros = filtros && Object.values(filtros).some(val => val !== '' && val !== undefined);
+
+      if (hayFiltros) {
+        // RF-24: Usamos nuestro motor de búsqueda
+        const dataPage = await buscarTareas(proyectoId, filtros);
+        setTareas(dataPage.content); // Spring Boot devuelve los datos dentro de 'content'
+      } else {
+        // Lógica original: Trae todo sin filtros
+        const data = await listarTareasPorProyecto(proyectoId);
+        setTareas(data);
+      }
     } catch {
       setError('No se pudieron cargar las tareas.');
     } finally {
@@ -77,7 +90,7 @@ export default function TareaBoard({ proyectoId, nombreProyecto }: TareaBoardPro
     setMostrarForm(true);
   };
 
-  // Drag & drop entre columnas para cambiar estado
+  // Drag & drop entre columnas para cambiar estado (Original)
   const handleDragStart = (e: React.DragEvent, tareaId: number) => {
     e.dataTransfer.setData('tareaId', String(tareaId));
   };
