@@ -1,7 +1,10 @@
 package com.worksync.worksync.Servicio;
 
 import com.worksync.worksync.DAO.TareaRepository;
+import com.worksync.worksync.DAO.MiembroProyectoRepository;
 import com.worksync.worksync.DTO.tareaDTO;
+import com.worksync.worksync.model.MiembroProyecto;
+import com.worksync.worksync.model.Rol;
 import com.worksync.worksync.model.Tarea;
 import com.worksync.worksync.util.TareaSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +20,16 @@ import java.util.stream.Collectors;
 @Service
 public class tareaSERVICIO {
 
+    private static final int MAX_TAREAS_POR_COLABORADOR = 3;
+
     @Autowired
     private TareaRepository tareaRepository;
 
     @Autowired
     private proyectoSERVICIO proyectoServicio;
+
+    @Autowired
+    private MiembroProyectoRepository miembroRepository;
 
     // RF-03: Crear tarea dentro de un proyecto
     public tareaDTO crear(tareaDTO dto) {
@@ -37,15 +45,30 @@ public class tareaSERVICIO {
         tarea.setDescripcion(dto.getDescripcion());
         tarea.setEstado("PENDIENTE");
         tarea.setPrioridad(dto.getPrioridad());
-        tarea.setResponsable(dto.getResponsableId() != null ? dto.getResponsableId().toString() : null);
         tarea.setProyectoId(dto.getProyectoId());
         tarea.setFechaLimite(dto.getFechaLimite());
+
+        // RF-04: Si viene responsable, validar antes de asignar
+        if (dto.getResponsableId() != null) {
+            validarAsignacion(dto.getProyectoId(), dto.getResponsableId());
+            tarea.setResponsable(dto.getResponsableId().toString());
+        }
 
         if (dto.getDependencias() != null) tarea.setDependencias(dto.getDependencias());
         if (dto.getEvidencias() != null) tarea.setEvidencias(dto.getEvidencias());
 
-        Tarea guardada = tareaRepository.save(tarea);
-        return convertirADTO(guardada);
+        return convertirADTO(tareaRepository.save(tarea));
+    }
+
+    // RF-04: Asignar o reasignar responsable a una tarea existente
+    public tareaDTO asignarResponsable(Long tareaId, Long usuarioId) {
+        Tarea tarea = tareaRepository.findByIdAndEliminadoLogicamenteFalse(tareaId)
+                .orElseThrow(() -> new RuntimeException("Tarea no encontrada con id: " + tareaId));
+
+        validarAsignacion(tarea.getProyectoId(), usuarioId);
+
+        tarea.setResponsable(usuarioId.toString());
+        return convertirADTO(tareaRepository.save(tarea));
     }
 
     // RF-03: Obtener tarea por id
@@ -73,14 +96,19 @@ public class tareaSERVICIO {
 
         if (dto.getTitulo() != null) tarea.setTitulo(dto.getTitulo());
         if (dto.getDescripcion() != null) tarea.setDescripcion(dto.getDescripcion());
-        if (dto.getPrioridad() != null) tarea.setPrioridad(dto.getPrioridad()); 
+        if (dto.getPrioridad() != null) tarea.setPrioridad(dto.getPrioridad());
         if (dto.getEstado() != null) tarea.setEstado(dto.getEstado());
         if (dto.getFechaLimite() != null) tarea.setFechaLimite(dto.getFechaLimite());
         if (dto.getDependencias() != null) tarea.setDependencias(dto.getDependencias());
         if (dto.getEvidencias() != null) tarea.setEvidencias(dto.getEvidencias());
 
-        Tarea actualizada = tareaRepository.save(tarea);
-        return convertirADTO(actualizada);
+        // RF-04: Si cambia el responsable, validar asignación
+        if (dto.getResponsableId() != null) {
+            validarAsignacion(tarea.getProyectoId(), dto.getResponsableId());
+            tarea.setResponsable(dto.getResponsableId().toString());
+        }
+
+        return convertirADTO(tareaRepository.save(tarea));
     }
 
     // RF-03: Eliminación lógica
@@ -96,22 +124,43 @@ public class tareaSERVICIO {
         Tarea tarea = tareaRepository.findByIdAndEliminadoLogicamenteFalse(id)
                 .orElseThrow(() -> new RuntimeException("Tarea no encontrada con id: " + id));
         tarea.setEstado(nuevoEstado);
-        Tarea actualizada = tareaRepository.save(tarea);
-        return convertirADTO(actualizada);
+        return convertirADTO(tareaRepository.save(tarea));
     }
 
-    // RF-24 y RNF-01: Búsqueda, filtros y paginación
+    // RF-24: Búsqueda, filtros y paginación
     public Page<tareaDTO> buscarYFiltrarTareas(
-            Long proyectoId, String estado, String prioridad, 
-            String responsable, LocalDate fechaLimite, String palabraClave, 
+            Long proyectoId, String estado, String prioridad,
+            String responsable, LocalDate fechaLimite, String palabraClave,
             Pageable pageable) {
-        
         Specification<Tarea> spec = TareaSpecification.filtrarTareas(
                 proyectoId, estado, prioridad, responsable, fechaLimite, palabraClave);
-        
-        Page<Tarea> tareasFiltradas = tareaRepository.findAll(spec, pageable);
-        
-        return tareasFiltradas.map(this::convertirADTO);
+        return tareaRepository.findAll(spec, pageable).map(this::convertirADTO);
+    }
+
+    // RF-04: Validaciones de asignación inteligente
+    private void validarAsignacion(Long proyectoId, Long usuarioId) {
+
+        // 1. Validar que el usuario es miembro activo del proyecto
+        MiembroProyecto miembro = miembroRepository
+                .findByProyectoIdAndUsuarioIdAndActivoTrue(proyectoId, usuarioId)
+                .orElseThrow(() -> new RuntimeException(
+                        "El usuario no es miembro activo del proyecto. Agrégalo primero."));
+
+        // 2. Validar que tiene rol COLABORADOR dentro del proyecto
+        if (miembro.getRol() != Rol.COLABORADOR) {
+            throw new RuntimeException(
+                    "Solo se puede asignar tareas a usuarios con rol COLABORADOR dentro del proyecto.");
+        }
+
+        // 3. Validar carga de trabajo — máximo 3 tareas activas
+        int tareasActivas = tareaRepository
+                .contarTareasActivasPorResponsable(usuarioId.toString(), proyectoId);
+
+        if (tareasActivas >= MAX_TAREAS_POR_COLABORADOR) {
+            throw new RuntimeException(
+                    "El colaborador ya tiene " + tareasActivas + " tareas activas. " +
+                            "Máximo permitido: " + MAX_TAREAS_POR_COLABORADOR + ".");
+        }
     }
 
     // Conversión entidad → DTO
@@ -127,6 +176,11 @@ public class tareaSERVICIO {
         dto.setFechaCreacion(tarea.getFechaCreacion());
         dto.setDependencias(tarea.getDependencias());
         dto.setEvidencias(tarea.getEvidencias());
+        if (tarea.getResponsable() != null) {
+            try {
+                dto.setResponsableId(Long.parseLong(tarea.getResponsable()));
+            } catch (NumberFormatException ignored) {}
+        }
         return dto;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tareas")
@@ -22,12 +23,11 @@ public class tareaControler {
     @Autowired
     private tareaSERVICIO tareaServicio;
 
-    // RF-03: Crear tarea dentro de un proyecto
+    // RF-03: Crear tarea
     @PostMapping
     public ResponseEntity<?> crearTarea(@RequestBody tareaDTO nuevaTarea) {
         try {
-            tareaDTO creada = tareaServicio.crear(nuevaTarea);
-            return new ResponseEntity<>(creada, HttpStatus.CREATED);
+            return new ResponseEntity<>(tareaServicio.crear(nuevaTarea), HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -37,8 +37,7 @@ public class tareaControler {
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerTarea(@PathVariable Long id) {
         try {
-            tareaDTO tarea = tareaServicio.obtenerPorId(id);
-            return new ResponseEntity<>(tarea, HttpStatus.OK);
+            return new ResponseEntity<>(tareaServicio.obtenerPorId(id), HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -55,18 +54,17 @@ public class tareaControler {
         }
     }
 
-    // RF-03: Actualizar datos de una tarea
+    // RF-03: Actualizar tarea
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarTarea(@PathVariable Long id, @RequestBody tareaDTO dto) {
         try {
-            tareaDTO actualizada = tareaServicio.actualizar(id, dto);
-            return new ResponseEntity<>(actualizada, HttpStatus.OK);
+            return new ResponseEntity<>(tareaServicio.actualizar(id, dto), HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // RF-03: Eliminación lógica de una tarea
+    // RF-03: Eliminación lógica
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarTarea(@PathVariable Long id) {
         try {
@@ -77,18 +75,33 @@ public class tareaControler {
         }
     }
 
-    // RF-05: Cambiar solo el estado de una tarea
+    // RF-05: Cambiar estado
     @PutMapping("/{id}/estado")
     public ResponseEntity<?> cambiarEstado(@PathVariable Long id, @RequestParam String nuevoEstado) {
         try {
-            tareaDTO actualizada = tareaServicio.actualizarEstado(id, nuevoEstado);
-            return new ResponseEntity<>(actualizada, HttpStatus.OK);
+            return new ResponseEntity<>(tareaServicio.actualizarEstado(id, nuevoEstado), HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // RF-24 y RNF-01: Buscar y filtrar tareas con paginación
+    // RF-04: Asignar responsable a una tarea (validando membresía, rol y carga)
+    @PutMapping("/{id}/asignar")
+    public ResponseEntity<?> asignarResponsable(
+            @PathVariable Long id,
+            @RequestBody Map<String, Long> body) {
+        try {
+            Long usuarioId = body.get("usuarioId");
+            if (usuarioId == null) {
+                return new ResponseEntity<>("El campo 'usuarioId' es obligatorio.", HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(tareaServicio.asignarResponsable(id, usuarioId), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // RF-24: Buscar y filtrar tareas con paginación
     @GetMapping("/buscar")
     public ResponseEntity<?> buscarTareas(
             @RequestParam(required = false) Long proyectoId,
