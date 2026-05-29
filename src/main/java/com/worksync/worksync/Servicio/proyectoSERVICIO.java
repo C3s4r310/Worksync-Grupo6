@@ -3,14 +3,20 @@ package com.worksync.worksync.Servicio;
 import com.worksync.worksync.DAO.ProyectoRepository;
 import com.worksync.worksync.DTO.proyectoDTO;
 import com.worksync.worksync.model.Proyecto;
+import com.worksync.worksync.util.ProyectoSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class proyectoSERVICIO {
+    
     @Autowired
     private ProyectoRepository proyectoRepository;
 
@@ -55,6 +61,16 @@ public class proyectoSERVICIO {
         return proyectoRepository.existsById(proyectoId);
     }
 
+    // RF-24 y RNF-01: Búsqueda, filtros y paginación para Proyectos
+    public Page<proyectoDTO> buscarYFiltrarProyectos(
+            String estado, LocalDate fechaInicio, String palabraClave, Pageable pageable) {
+        
+        Specification<Proyecto> spec = ProyectoSpecification.filtrarProyectos(estado, fechaInicio, palabraClave);
+        Page<Proyecto> proyectosFiltrados = proyectoRepository.findAll(spec, pageable);
+        
+        return proyectosFiltrados.map(this::convertirADTO);
+    }
+
     // Convierte entidad a DTO
     private proyectoDTO convertirADTO(Proyecto proyecto) {
         proyectoDTO dto = new proyectoDTO();
@@ -65,23 +81,5 @@ public class proyectoSERVICIO {
         dto.setFechaInicio(proyecto.getFechaInicio());
         dto.setFechaFin(proyecto.getFechaFin());
         return dto;
-    }
-    // RF-02 + RNF-06: Eliminación lógica
-    public void eliminarProyecto(Long id) {
-    Proyecto proyecto = proyectoRepository.findById(id) 
-    .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con id: " + id));    
-    proyecto.setEliminadoLogicamente(true);
-
-    proyectoRepository.save(proyecto);
-    }
-
-    // RF-02: Cerrar proyecto
-    public proyectoDTO cerrarProyecto(Long id) {
-        Proyecto proyecto = proyectoRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con id: " + id));
-        proyecto.setEstado("CERRADO");
-        Proyecto actualizado = proyectoRepository.save(proyecto);
-        return convertirADTO(actualizado);
-        
     }
 }

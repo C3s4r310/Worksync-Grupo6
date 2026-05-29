@@ -3,10 +3,15 @@ package com.worksync.worksync.controlador;
 import com.worksync.worksync.DTO.tareaDTO;
 import com.worksync.worksync.Servicio.tareaSERVICIO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -78,6 +83,27 @@ public class tareaControler {
         try {
             tareaDTO actualizada = tareaServicio.actualizarEstado(id, nuevoEstado);
             return new ResponseEntity<>(actualizada, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // RF-24 y RNF-01: Buscar y filtrar tareas con paginación
+    @GetMapping("/buscar")
+    public ResponseEntity<?> buscarTareas(
+            @RequestParam(required = false) Long proyectoId,
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String prioridad,
+            @RequestParam(required = false) String responsable,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaLimite,
+            @RequestParam(required = false) String palabraClave,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<tareaDTO> resultado = tareaServicio.buscarYFiltrarTareas(
+                    proyectoId, estado, prioridad, responsable, fechaLimite, palabraClave, pageable);
+            return new ResponseEntity<>(resultado, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
