@@ -2,11 +2,15 @@ package com.worksync.worksync.Servicio;
 
 import com.worksync.worksync.DAO.TareaRepository;
 import com.worksync.worksync.DTO.tareaDTO;
-import com.worksync.worksync.model.Prioridad;
 import com.worksync.worksync.model.Tarea;
+import com.worksync.worksync.util.TareaSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +25,9 @@ public class tareaSERVICIO {
 
     // RF-03: Crear tarea dentro de un proyecto
     public tareaDTO crear(tareaDTO dto) {
-        // Validar que el proyecto exista
         if (dto.getProyectoId() == null || !proyectoServicio.existeProyecto(dto.getProyectoId())) {
             throw new RuntimeException("El proyecto con id " + dto.getProyectoId() + " no existe.");
         }
-
-        // Validar prioridad (RF-14)
         if (dto.getPrioridad() == null) {
             throw new RuntimeException("La prioridad es obligatoria. Valores válidos: BAJA, MEDIA, ALTA, CRITICA.");
         }
@@ -72,7 +73,7 @@ public class tareaSERVICIO {
 
         if (dto.getTitulo() != null) tarea.setTitulo(dto.getTitulo());
         if (dto.getDescripcion() != null) tarea.setDescripcion(dto.getDescripcion());
-        if (dto.getPrioridad() != null) tarea.setPrioridad(dto.getPrioridad()); // RF-14
+        if (dto.getPrioridad() != null) tarea.setPrioridad(dto.getPrioridad()); 
         if (dto.getEstado() != null) tarea.setEstado(dto.getEstado());
         if (dto.getFechaLimite() != null) tarea.setFechaLimite(dto.getFechaLimite());
         if (dto.getDependencias() != null) tarea.setDependencias(dto.getDependencias());
@@ -97,6 +98,20 @@ public class tareaSERVICIO {
         tarea.setEstado(nuevoEstado);
         Tarea actualizada = tareaRepository.save(tarea);
         return convertirADTO(actualizada);
+    }
+
+    // RF-24 y RNF-01: Búsqueda, filtros y paginación
+    public Page<tareaDTO> buscarYFiltrarTareas(
+            Long proyectoId, String estado, String prioridad, 
+            String responsable, LocalDate fechaLimite, String palabraClave, 
+            Pageable pageable) {
+        
+        Specification<Tarea> spec = TareaSpecification.filtrarTareas(
+                proyectoId, estado, prioridad, responsable, fechaLimite, palabraClave);
+        
+        Page<Tarea> tareasFiltradas = tareaRepository.findAll(spec, pageable);
+        
+        return tareasFiltradas.map(this::convertirADTO);
     }
 
     // Conversión entidad → DTO
