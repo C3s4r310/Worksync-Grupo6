@@ -26,19 +26,29 @@ public class ProyectoController {
     // RF02: Crear un proyecto
     @PostMapping
     public ResponseEntity<?> crearProyecto(@RequestBody proyectoDTO nuevoProyecto) {
-        return new ResponseEntity<>("Proyecto creado", HttpStatus.CREATED);
+        try {
+            proyectoDTO creado = proyectoServicio.crearProyecto(nuevoProyecto);
+            return new ResponseEntity<>(creado, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     // RF02: Visualizar proyectos
     @GetMapping
     public ResponseEntity<List<?>> listarProyectos() {
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(proyectoServicio.listarProyectos(), HttpStatus.OK);
     }
 
     // RF02: Editar proyecto
     @PutMapping("/{id}")
     public ResponseEntity<?> editarProyecto(@PathVariable Long id, @RequestBody proyectoDTO proyecto) {
-        return new ResponseEntity<>("Proyecto actualizado", HttpStatus.OK);
+        try {
+            proyectoDTO actualizado = proyectoServicio.editarProyecto(id, proyecto);
+            return new ResponseEntity<>(actualizado, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     // RF-24 y RNF-01: Buscar y filtrar proyectos con paginación
