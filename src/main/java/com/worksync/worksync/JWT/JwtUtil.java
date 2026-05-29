@@ -12,14 +12,11 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // Clave secreta para firmar el token (mínimo 256 bits para HS256)
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-    // Tiempo de expiración: 24 horas en milisegundos
     private static final long EXPIRACION_MS = 1000 * 60 * 60 * 24;
 
-    // Genera un token JWT con el correo del usuario como subject
-    public static String generarToken(String correo) {
+    // Genera un token JWT — ahora es de instancia, no estático
+    public String generarToken(String correo) {
         return Jwts.builder()
                 .setSubject(correo)
                 .setIssuedAt(new Date())
@@ -33,7 +30,7 @@ public class JwtUtil {
         return extraerClaims(token).getSubject();
     }
 
-    // que el token no haya expirado
+    // Valid que el token no haya expirado
     public boolean tokenEsValido(String token) {
         try {
             Date expiracion = extraerClaims(token).getExpiration();
