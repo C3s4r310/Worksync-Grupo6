@@ -3,6 +3,8 @@ import Dashboard from '../pages/Dashboard';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import ProyectosPage from '../pages/ProyectosPage';
+import TareasPage from '../pages/TareasPage';
 import ProtectedRoute from './ProtectedRoute';
 
 export default function AppRouter() {
@@ -25,6 +27,22 @@ export default function AppRouter() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/proyectos"
+          element={
+            <ProtectedRoute>
+              <ProyectosPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/proyectos/:proyectoId/tareas"
+          element={
+            <ProtectedRoute>
+              <TareasPage />
             </ProtectedRoute>
           }
         />

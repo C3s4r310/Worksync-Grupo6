@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import TareaBoard from '../components/tareas/TareaBoard';
 import type { FiltrosTarea } from '../types/tarea';
 
@@ -8,9 +9,12 @@ interface TareasPageProps {
 }
 
 export default function TareasPage({
-  proyectoId = 1,
-  nombreProyecto = 'Proyecto de prueba',
+  proyectoId: propProyectoId,
+  nombreProyecto: propNombreProyecto,
 }: TareasPageProps) {
+  const { proyectoId: paramProyectoId } = useParams<{ proyectoId: string }>();
+  const activeProyectoId = paramProyectoId ? Number(paramProyectoId) : (propProyectoId ?? 1);
+  const activeNombreProyecto = propNombreProyecto || `Proyecto #${activeProyectoId}`;
   
   // Estado temporal: guarda lo que el usuario escribe en tiempo real
   const [filtros, setFiltros] = useState<FiltrosTarea>({});
@@ -34,7 +38,7 @@ export default function TareasPage({
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
       <header style={{ marginBottom: '24px' }}>
         <h1 style={{ fontSize: '24px', color: '#333', marginBottom: '8px' }}>
-          Gestión de Tareas - {nombreProyecto}
+          Gestión de Tareas - {activeNombreProyecto}
         </h1>
         <p style={{ color: '#666', fontSize: '14px' }}>
           Utiliza los filtros para encontrar rápidamente las tareas de tu equipo.
@@ -107,8 +111,8 @@ export default function TareasPage({
 
       {/* Tablero de Jeremy: Ahora recibe los filtros como "props" */}
       <TareaBoard
-        proyectoId={proyectoId}
-        nombreProyecto={nombreProyecto}
+        proyectoId={activeProyectoId}
+        nombreProyecto={activeNombreProyecto}
         filtros={filtrosAplicados}
       />
     </div>

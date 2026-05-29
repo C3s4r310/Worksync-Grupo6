@@ -3,11 +3,16 @@ import type { Tarea, TareaRequest, Page, FiltrosTarea } from '../types/tarea';
 // URL base del backend Spring Boot
 const BASE_URL = 'http://localhost:8080/api/tareas';
 
-// Obtiene el token JWT guardado en sessionStorage
-const getAuthHeader = (): HeadersInit => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${sessionStorage.getItem('token') ?? ''}`,
-});
+import { loadAuth } from '../utils/storage';
+
+// Obtiene el token JWT guardado en localStorage
+const getAuthHeader = (): HeadersInit => {
+  const auth = loadAuth();
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${auth?.token ?? ''}`,
+  };
+};
 
 // RF-03: Crear una tarea
 export const crearTarea = async (datos: TareaRequest): Promise<Tarea> => {

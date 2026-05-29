@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { register as registerRequest } from '../services/authService';
 import useAuth from '../hooks/useAuth';
@@ -45,59 +45,59 @@ export default function Register() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F4F5F7] flex items-center justify-center px-4 py-10">
-      <section className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="text-3xl font-semibold text-slate-900 mb-4">Crear cuenta</h1>
-        <p className="text-sm text-slate-600 mb-6">Regístrate y empieza a usar WorkSync.</p>
+    <main className="page-container flex-center">
+      <section className="auth-card">
+        <h1 className="title-xl">Crear cuenta</h1>
+        <p className="subtitle-auth">Regístrate y empieza a usar WorkSync.</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <label className="block text-sm font-medium text-slate-700">
+        <form onSubmit={handleSubmit} className="form-layout">
+          <label className="form-label">
             Usuario
             <input
               type="text"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500"
+              className="form-input"
               placeholder="Nombre de usuario"
             />
           </label>
 
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="form-label">
             Correo electrónico
             <input
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500"
+              className="form-input"
               placeholder="usuario@correo.com"
             />
           </label>
 
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="form-label">
             Contraseña
             <input
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-sky-500"
+              className="form-input"
               placeholder="********"
             />
           </label>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="error-text">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="btn-primary"
           >
             {loading ? 'Registrando...' : 'Crear cuenta'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-600">
+        <p className="auth-footer-text">
           ¿Ya tienes cuenta?{' '}
-          <Link to="/login" className="font-semibold text-slate-900 hover:text-sky-600">
+          <Link to="/login" className="link-highlight">
             Inicia sesión
           </Link>
         </p>

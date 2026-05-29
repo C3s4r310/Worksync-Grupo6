@@ -4,11 +4,16 @@ import type { Page } from '../types/tarea'; // Aprovechamos la interfaz genéric
 // URL base del backend Spring Boot
 const BASE_URL = 'http://localhost:8080/api/proyectos';
 
-// Obtiene el token JWT guardado en sessionStorage
-const getAuthHeader = (): HeadersInit => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${sessionStorage.getItem('token') ?? ''}`,
-});
+import { loadAuth } from '../utils/storage';
+
+// Obtiene el token JWT guardado en localStorage
+const getAuthHeader = (): HeadersInit => {
+  const auth = loadAuth();
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${auth?.token ?? ''}`,
+  };
+};
 
 // RF-02: Crear un proyecto
 export const crearProyecto = async (datos: ProyectoRequest): Promise<string> => {
