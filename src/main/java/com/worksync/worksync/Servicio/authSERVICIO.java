@@ -4,6 +4,7 @@ import com.worksync.worksync.DAO.userDAO;
 import com.worksync.worksync.DTO.LoginRequestDTO;
 import com.worksync.worksync.DTO.RegisterRequestDTO;
 import com.worksync.worksync.JWT.JwtUtil;
+import com.worksync.worksync.model.Rol;
 import com.worksync.worksync.model.Usuario;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class authSERVICIO {
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // LOGIN
+    // LOGIN — genera token con correo y rol
     public String login(LoginRequestDTO credenciales) {
         Usuario usuario = userDAO
                 .findByCorreo(credenciales.getCorreo())
@@ -31,20 +32,22 @@ public class authSERVICIO {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
-        // Llamada de instancia, no estática
-        return jwtUtil.generarToken(usuario.getCorreo());
+        return jwtUtil.generarToken(usuario.getCorreo(), usuario.getRol().name());
     }
 
-    // REGISTER
+    // REGISTER — por defecto COLABORADOR
     public String register(RegisterRequestDTO request) {
+        if (userDAO.findByCorreo(request.getCorreo()).isPresent()) {
+            throw new RuntimeException("Ya existe un usuario con ese correo");
+        }
+
         Usuario usuario = new Usuario();
         usuario.setNombre(request.getNombre());
         usuario.setCorreo(request.getCorreo());
         usuario.setContrasena(passwordEncoder.encode(request.getContrasena()));
-        usuario.setRol("COLABORADOR");
+        usuario.setRol(Rol.COLABORADOR);
 
         userDAO.save(usuario);
-
         return "Usuario registrado correctamente";
     }
 }

@@ -13,34 +13,38 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final long EXPIRACION_MS = 1000 * 60 * 60 * 24;
+    private static final long EXPIRACION_MS = 1000 * 60 * 60 * 24; // 24 horas
 
-    // Genera un token JWT — ahora es de instancia, no estático
-    public String generarToken(String correo) {
+    // Genera token con correo y rol incluidos
+    public String generarToken(String correo, String rol) {
         return Jwts.builder()
                 .setSubject(correo)
+                .claim("rol", rol)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRACION_MS))
                 .signWith(SECRET_KEY)
                 .compact();
     }
 
-    // Extrae el correo (subject) del token
+    // Extrae el correo del token
     public String extraerCorreo(String token) {
         return extraerClaims(token).getSubject();
     }
 
-    // Valid que el token no haya expirado
+    // Extrae el rol del token
+    public String extraerRol(String token) {
+        return extraerClaims(token).get("rol", String.class);
+    }
+
+    // Valida que el token no haya expirado
     public boolean tokenEsValido(String token) {
         try {
-            Date expiracion = extraerClaims(token).getExpiration();
-            return expiracion.after(new Date());
+            return extraerClaims(token).getExpiration().after(new Date());
         } catch (Exception e) {
             return false;
         }
     }
 
-    // Extrae todos los claims del token
     private Claims extraerClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)

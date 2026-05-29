@@ -4,6 +4,7 @@ import com.worksync.worksync.JWT.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,23 +21,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Deshabilitar CSRF (no aplica para APIs REST con JWT)
                 .csrf(csrf -> csrf.disable())
-
-                // Configurar rutas públicas y protegidas
                 .authorizeHttpRequests(auth -> auth
-                        // Rutas públicas: login, registro y swagger/docs si hubiera
+
+                        // Rutas públicas
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // RF-08: Solo ADMIN puede cambiar roles
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/rol").hasRole("ADMIN")
+
+                        // RF-08: Solo ADMIN puede listar todos los usuarios
+                        .requestMatchers(HttpMethod.GET, "/api/usuarios").hasRole("ADMIN")
+
+                        // RF-02: Solo ADMIN y LIDER pueden crear y editar proyectos
+                        .requestMatchers(HttpMethod.POST, "/api/proyectos").hasAnyRole("ADMIN", "LIDER")
+                        .requestMatchers(HttpMethod.PUT, "/api/proyectos/**").hasAnyRole("ADMIN", "LIDER")
+
+                        // RF-03: Solo ADMIN y LIDER pueden crear, editar y eliminar tareas
+                        .requestMatchers(HttpMethod.POST, "/api/tareas").hasAnyRole("ADMIN", "LIDER")
+                        .requestMatchers(HttpMethod.PUT, "/api/tareas/**").hasAnyRole("ADMIN", "LIDER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/tareas/**").hasAnyRole("ADMIN", "LIDER")
+
+                        // Cualquier usuario autenticado puede ver tareas y proyectos
+                        .requestMatchers(HttpMethod.GET, "/api/tareas/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/proyectos/**").authenticated()
+
                         // Todo lo demás requiere autenticación
                         .anyRequest().authenticated()
                 )
-
-                // Sin sesión de servidor (stateless con JWT)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
-                // Agregar el filtro JWT antes del filtro estándar de autenticación
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
