@@ -37,6 +37,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/proyectos").hasAnyRole("ADMIN", "LIDER")
                         .requestMatchers(HttpMethod.PUT, "/api/proyectos/**").hasAnyRole("ADMIN", "LIDER")
 
+                        // RF-09: Solo ADMIN y LIDER pueden agregar y retirar miembros
+                        .requestMatchers(HttpMethod.POST, "/api/proyectos/*/miembros").hasAnyRole("ADMIN", "LIDER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/proyectos/*/miembros/*").hasAnyRole("ADMIN", "LIDER")
+
                         // RF-03: Solo ADMIN y LIDER pueden crear, editar y eliminar tareas
                         .requestMatchers(HttpMethod.POST, "/api/tareas").hasAnyRole("ADMIN", "LIDER")
                         .requestMatchers(HttpMethod.PUT, "/api/tareas/**").hasAnyRole("ADMIN", "LIDER")
