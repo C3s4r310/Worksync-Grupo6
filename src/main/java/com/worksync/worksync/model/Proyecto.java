@@ -12,6 +12,7 @@ public class Proyecto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Boolean activo = true;
 
     private String nombre;
     private String descripcion;

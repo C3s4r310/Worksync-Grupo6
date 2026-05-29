@@ -66,4 +66,22 @@ public class proyectoSERVICIO {
         dto.setFechaFin(proyecto.getFechaFin());
         return dto;
     }
+    // RF-02 + RNF-06: Eliminación lógica
+    public void eliminarProyecto(Long id) {
+    Proyecto proyecto = proyectoRepository.findById(id) 
+    .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con id: " + id));    
+    proyecto.setEliminadoLogicamente(true);
+
+    proyectoRepository.save(proyecto);
+    }
+
+    // RF-02: Cerrar proyecto
+    public proyectoDTO cerrarProyecto(Long id) {
+        Proyecto proyecto = proyectoRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con id: " + id));
+        proyecto.setEstado("CERRADO");
+        Proyecto actualizado = proyectoRepository.save(proyecto);
+        return convertirADTO(actualizado);
+        
+    }
 }

@@ -45,7 +45,6 @@ public class authSERVICIO {
     public String register(RegisterRequestDTO request){
 
         Usuario usuario = new Usuario();
-
         usuario.setNombre(request.getNombre());
         usuario.setCorreo(request.getCorreo());
 
