@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.worksync.worksync.Servicio.proyectoSERVICIO; 
+import com.worksync.worksync.Servicio.proyectoSERVICIO;
 import com.worksync.worksync.DTO.proyectoDTO;
 
 import java.time.LocalDate;
@@ -48,6 +48,17 @@ public class ProyectoController {
             return new ResponseEntity<>(actualizado, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // RF-02: Eliminación lógica de proyecto
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarProyecto(@PathVariable Long id) {
+        try {
+            proyectoServicio.eliminarProyecto(id);
+            return new ResponseEntity<>("Proyecto eliminado correctamente.", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

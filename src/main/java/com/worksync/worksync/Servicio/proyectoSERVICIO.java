@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class proyectoSERVICIO {
-    
+
     @Autowired
     private ProyectoRepository proyectoRepository;
 
@@ -56,6 +56,14 @@ public class proyectoSERVICIO {
         return convertirADTO(actualizado);
     }
 
+    // RF-02: Eliminación lógica de proyecto
+    public void eliminarProyecto(Long id) {
+        Proyecto proyecto = proyectoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con id: " + id));
+        proyecto.setEliminadoLogicamente(true);
+        proyectoRepository.save(proyecto);
+    }
+
     // Verifica si un proyecto existe (usado por tareaSERVICIO)
     public boolean existeProyecto(Long proyectoId) {
         return proyectoRepository.existsById(proyectoId);
@@ -64,10 +72,10 @@ public class proyectoSERVICIO {
     // RF-24 y RNF-01: Búsqueda, filtros y paginación para Proyectos
     public Page<proyectoDTO> buscarYFiltrarProyectos(
             String estado, LocalDate fechaInicio, String palabraClave, Pageable pageable) {
-        
+
         Specification<Proyecto> spec = ProyectoSpecification.filtrarProyectos(estado, fechaInicio, palabraClave);
         Page<Proyecto> proyectosFiltrados = proyectoRepository.findAll(spec, pageable);
-        
+
         return proyectosFiltrados.map(this::convertirADTO);
     }
 
