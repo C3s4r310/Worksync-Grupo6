@@ -3,6 +3,7 @@ package com.worksync.worksync.Servicio;
 import com.worksync.worksync.DAO.TareaRepository;
 import com.worksync.worksync.DAO.MiembroProyectoRepository;
 import com.worksync.worksync.DTO.tareaDTO;
+import com.worksync.worksync.model.EstadoTarea;
 import com.worksync.worksync.model.MiembroProyecto;
 import com.worksync.worksync.model.Rol;
 import com.worksync.worksync.model.Tarea;
@@ -43,7 +44,7 @@ public class tareaSERVICIO {
         Tarea tarea = new Tarea();
         tarea.setTitulo(dto.getTitulo());
         tarea.setDescripcion(dto.getDescripcion());
-        tarea.setEstado("PENDIENTE");
+        tarea.setEstado(EstadoTarea.PENDIENTE);
         tarea.setPrioridad(dto.getPrioridad());
         tarea.setProyectoId(dto.getProyectoId());
         tarea.setFechaLimite(dto.getFechaLimite());
@@ -119,11 +120,21 @@ public class tareaSERVICIO {
         tareaRepository.save(tarea);
     }
 
-    // RF-05: Actualizar solo el estado
+    // RF-05: Actualizar solo el estado — valida que sea un valor permitido
     public tareaDTO actualizarEstado(Long id, String nuevoEstado) {
         Tarea tarea = tareaRepository.findByIdAndEliminadoLogicamenteFalse(id)
                 .orElseThrow(() -> new RuntimeException("Tarea no encontrada con id: " + id));
-        tarea.setEstado(nuevoEstado);
+
+        EstadoTarea estado;
+        try {
+            estado = EstadoTarea.valueOf(nuevoEstado.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(
+                    "Estado inválido: '" + nuevoEstado + "'. " +
+                            "Valores válidos: PENDIENTE, EN_PROGRESO, BLOQUEADA, EN_REVISION, OBSERVADA, COMPLETADA, CANCELADA.");
+        }
+
+        tarea.setEstado(estado);
         return convertirADTO(tareaRepository.save(tarea));
     }
 

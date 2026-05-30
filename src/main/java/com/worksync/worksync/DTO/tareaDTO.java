@@ -1,5 +1,6 @@
 package com.worksync.worksync.DTO;
 
+import com.worksync.worksync.model.EstadoTarea;
 import com.worksync.worksync.model.Prioridad;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ public class tareaDTO {
     private Long id;
     private String titulo;
     private String descripcion;
-    private String estado;      // Esta es la variable que tu servicio intenta modificar
+    private EstadoTarea estado;
     private Prioridad prioridad;
     private Long responsableId;
     private Long proyectoId;
@@ -26,7 +27,7 @@ public class tareaDTO {
     public Long getId() { return id; }
     public String getTitulo() { return titulo; }
     public String getDescripcion() { return descripcion; }
-    public String getEstado() { return estado; }
+    public EstadoTarea getEstado() { return estado; }
     public Prioridad getPrioridad() { return prioridad; }
     public Long getResponsableId() { return responsableId; }
     public Long getProyectoId() { return proyectoId; }
@@ -39,7 +40,7 @@ public class tareaDTO {
     public void setId(Long id) { this.id = id; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public void setEstado(EstadoTarea estado) { this.estado = estado; }
     public void setPrioridad(Prioridad prioridad) { this.prioridad = prioridad; }
     public void setResponsableId(Long responsableId) { this.responsableId = responsableId; }
     public void setProyectoId(Long proyectoId) { this.proyectoId = proyectoId; }

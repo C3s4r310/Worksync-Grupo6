@@ -19,7 +19,10 @@ public class Tarea {
 
     @Enumerated(EnumType.STRING)
     private Prioridad prioridad;
-    private String estado;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoTarea estado;
+
     private String responsable;
     private LocalDate fechaLimite;
     private LocalDateTime fechaCreacion;
