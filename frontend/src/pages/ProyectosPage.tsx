@@ -1,179 +1,229 @@
 import { useEffect, useState } from 'react';
-import type { Proyecto, FiltrosProyecto } from '../types/proyecto';
-import { buscarProyectos } from '../services/proyectoService';
+import { useNavigate } from 'react-router-dom';
+import type { Proyecto } from '../types/proyecto';
+import { buscarProyectos, crearProyecto, editarProyecto } from '../services/proyectoService';
+import AppLayout from '../components/AppLayout';
+
+const ESTADOS = ['ACTIVO', 'EN_PAUSA', 'FINALIZADO'];
+
+const BADGE: Record<string, string> = {
+  ACTIVO: 'ws-badge ws-badge-activo',
+  EN_PAUSA: 'ws-badge ws-badge-pausa',
+  FINALIZADO: 'ws-badge ws-badge-finalizado',
+};
+
+const LABEL: Record<string, string> = {
+  ACTIVO: 'Activo',
+  EN_PAUSA: 'En pausa',
+  FINALIZADO: 'Finalizado',
+};
+
+interface FormData {
+  nombre: string;
+  descripcion: string;
+  estado: string;
+  fechaInicio: string;
+  fechaFin: string;
+}
+
+const FORM_VACIO: FormData = { nombre: '', descripcion: '', estado: 'ACTIVO', fechaInicio: '', fechaFin: '' };
 
 export default function ProyectosPage() {
-  const [filtros, setFiltros] = useState<FiltrosProyecto>({});
-  const [filtrosAplicados, setFiltrosAplicados] = useState<FiltrosProyecto>({});
-  
+  const navigate = useNavigate();
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
-  const [cargando, setCargando] = useState(false);
+  const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
+  const [busqueda, setBusqueda] = useState('');
+  const [filtroEstado, setFiltroEstado] = useState('');
 
-  // Se ejecuta al cargar la página o cuando el usuario hace clic en "Filtrar"
-  useEffect(() => {
-    cargarProyectos();
-  }, [filtrosAplicados]);
+  // Modal
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [editando, setEditando] = useState<Proyecto | null>(null);
+  const [form, setForm] = useState<FormData>(FORM_VACIO);
+  const [guardando, setGuardando] = useState(false);
 
-  const cargarProyectos = async () => {
+  useEffect(() => { cargar(); }, []);
+
+  const cargar = async () => {
     try {
       setCargando(true);
-      setError('');
-      // Llamamos a tu backend mágico
-      const dataPage = await buscarProyectos(filtrosAplicados);
-      setProyectos(dataPage.content);
-    } catch (e) {
-      setError('No se pudieron cargar los proyectos. Verifica la conexión.');
+      const data = await buscarProyectos({});
+      setProyectos(data.content);
+    } catch {
+      setError('No se pudieron cargar los proyectos.');
     } finally {
       setCargando(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFiltros(prev => ({ ...prev, [name]: value }));
+  const proyectosFiltrados = proyectos.filter(p => {
+    const coincideNombre = p.nombre.toLowerCase().includes(busqueda.toLowerCase());
+    const coincideEstado = !filtroEstado || p.estado === filtroEstado;
+    return coincideNombre && coincideEstado;
+  });
+
+  const abrirCrear = () => {
+    setEditando(null);
+    setForm(FORM_VACIO);
+    setModalAbierto(true);
   };
 
-  const aplicarFiltros = () => {
-    setFiltrosAplicados(filtros);
+  const abrirEditar = (p: Proyecto, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditando(p);
+    setForm({
+      nombre: p.nombre,
+      descripcion: p.descripcion ?? '',
+      estado: p.estado,
+      fechaInicio: p.fechaInicio ?? '',
+      fechaFin: p.fechaFin ?? '',
+    });
+    setModalAbierto(true);
   };
 
-  // Función auxiliar para darle color al estado del proyecto (Usabilidad)
-  const getColorEstado = (estado: string) => {
-    switch (estado) {
-      case 'ACTIVO': return { bg: '#e8f5e9', text: '#4caf50' };
-      case 'EN_PAUSA': return { bg: '#fff3e0', text: '#ff9800' };
-      case 'FINALIZADO': return { bg: '#e3f2fd', text: '#2196f3' };
-      default: return { bg: '#f5f5f5', text: '#666' };
+  const cerrarModal = () => { setModalAbierto(false); setEditando(null); };
+
+  const handleForm = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const guardar = async () => {
+    if (!form.nombre.trim()) return;
+    setGuardando(true);
+    try {
+      if (editando) {
+        const actualizado = await editarProyecto(editando.id, form);
+        setProyectos(prev => prev.map(p => p.id === editando.id ? actualizado : p));
+      } else {
+        const nuevo = await crearProyecto(form);
+        setProyectos(prev => [...prev, nuevo]);
+      }
+      cerrarModal();
+    } catch {
+      setError('Error al guardar el proyecto.');
+    } finally {
+      setGuardando(false);
     }
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <header style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '24px', color: '#333', marginBottom: '8px' }}>
-          Directorio de Proyectos
-        </h1>
-        <p style={{ color: '#666', fontSize: '14px' }}>
-          Busca y filtra los proyectos de la organización.
-        </p>
-      </header>
-
-      {/* RNF-03: Panel de Filtros Intuitivo */}
-      <section style={{
-        backgroundColor: '#fff',
-        padding: '20px',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        marginBottom: '24px',
-        display: 'flex',
-        gap: '16px',
-        flexWrap: 'wrap',
-        alignItems: 'flex-end'
-      }}>
-        <div style={{ display: 'flex', flexDirection: 'column', flex: '1', minWidth: '200px' }}>
-          <label style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#555' }}>Buscar palabra clave</label>
-          <input 
-            type="text" 
-            name="palabraClave"
-            placeholder="Ej. Rediseño, API, Migración..."
-            onChange={handleInputChange}
-            style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
-          />
+    <AppLayout>
+      <div className="ws-page-header">
+        <div>
+          <h1 className="ws-page-title">Mis Proyectos</h1>
+          <p className="ws-page-subtitle">Gestiona y monitorea todos tus proyectos</p>
         </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', minWidth: '150px' }}>
-          <label style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#555' }}>Estado</label>
-          <select name="estado" onChange={handleInputChange} style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}>
-            <option value="">Todos</option>
-            <option value="ACTIVO">Activo</option>
-            <option value="EN_PAUSA">En Pausa</option>
-            <option value="FINALIZADO">Finalizado</option>
-          </select>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', minWidth: '150px' }}>
-          <label style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#555' }}>Fecha de Inicio (desde)</label>
-          <input 
-            type="date" 
-            name="fechaInicio"
-            onChange={handleInputChange}
-            style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
-          />
-        </div>
-
-        <button 
-          onClick={aplicarFiltros}
-          style={{
-            padding: '10px 24px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            height: '40px',
-            transition: 'background-color 0.2s'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007bff'}
-        >
-          Filtrar Proyectos
+        <button className="ws-btn-primary" onClick={abrirCrear}>
+          + Nuevo Proyecto
         </button>
-      </section>
+      </div>
 
-      {/* Resultados de la búsqueda */}
-      {error && <div style={{ color: 'red', marginBottom: '16px' }}>{error}</div>}
-      
-      {cargando ? (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>Cargando proyectos...</div>
-      ) : (
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
-          gap: '20px' 
-        }}>
-          {proyectos.length === 0 ? (
-            <p style={{ color: '#666', gridColumn: '1 / -1', textAlign: 'center', padding: '40px' }}>
-              No se encontraron proyectos con esos filtros.
-            </p>
-          ) : (
-            proyectos.map(proyecto => {
-              const color = getColorEstado(proyecto.estado);
-              return (
-                <div key={proyecto.id} style={{
-                  backgroundColor: '#fff',
-                  padding: '20px',
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                  borderLeft: `4px solid ${color.text}`
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                    <h3 style={{ margin: 0, fontSize: '18px', color: '#333' }}>{proyecto.nombre}</h3>
-                    <span style={{ 
-                      backgroundColor: color.bg, 
-                      color: color.text, 
-                      padding: '4px 8px', 
-                      borderRadius: '12px', 
-                      fontSize: '12px',
-                      fontWeight: 'bold'
-                    }}>
-                      {proyecto.estado}
-                    </span>
-                  </div>
-                  <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px', minHeight: '40px' }}>
-                    {proyecto.descripcion || 'Sin descripción'}
-                  </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#888' }}>
-                    <span>Inicio: {proyecto.fechaInicio || 'N/A'}</span>
-                    <span>Fin: {proyecto.fechaFin || 'N/A'}</span>
-                  </div>
-                </div>
-              );
-            })
-          )}
+      {/* Filtros */}
+      <div className="ws-filters">
+        <div className="ws-search-wrap">
+          <span className="ws-search-icon">🔍</span>
+          <input
+            className="ws-search-input"
+            placeholder="Buscar proyectos..."
+            value={busqueda}
+            onChange={e => setBusqueda(e.target.value)}
+          />
+        </div>
+        <select className="ws-select" value={filtroEstado} onChange={e => setFiltroEstado(e.target.value)}>
+          <option value="">Todos los estados</option>
+          {ESTADOS.map(e => <option key={e} value={e}>{LABEL[e]}</option>)}
+        </select>
+      </div>
+
+      {error && <div style={{ color: '#ef4444', marginBottom: 12, fontSize: 14 }}>{error}</div>}
+
+      {/* Tabla */}
+      <div className="ws-table-wrap">
+        <table className="ws-table">
+          <thead>
+            <tr>
+              <th>Nombre del proyecto</th>
+              <th>Estado</th>
+              <th>Fecha inicio</th>
+              <th>Fecha fin</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cargando ? (
+              <tr><td colSpan={5} className="ws-empty">Cargando proyectos...</td></tr>
+            ) : proyectosFiltrados.length === 0 ? (
+              <tr><td colSpan={5} className="ws-empty">No se encontraron proyectos.</td></tr>
+            ) : (
+              proyectosFiltrados.map(p => (
+                <tr
+                  key={p.id}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => navigate(`/proyectos/${p.id}/tareas`)}
+                >
+                  <td style={{ fontWeight: 600 }}>{p.nombre}</td>
+                  <td><span className={BADGE[p.estado] ?? 'ws-badge'}>{LABEL[p.estado] ?? p.estado}</span></td>
+                  <td>{p.fechaInicio ?? '—'}</td>
+                  <td>{p.fechaFin ?? '—'}</td>
+                  <td onClick={e => e.stopPropagation()}>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      <button className="ws-btn-icon" title="Ver" onClick={() => navigate(`/proyectos/${p.id}/tareas`)}>👁</button>
+                      <button className="ws-btn-icon" title="Editar" onClick={e => abrirEditar(p, e)}>✏️</button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+        <div className="ws-pagination">
+          Mostrando {proyectosFiltrados.length} de {proyectos.length} proyectos
+        </div>
+      </div>
+
+      {/* Modal Crear / Editar */}
+      {modalAbierto && (
+        <div className="ws-modal-overlay" onClick={cerrarModal}>
+          <div className="ws-modal" onClick={e => e.stopPropagation()}>
+            <div className="ws-modal-header">
+              <h2 className="ws-modal-title">{editando ? 'Editar Proyecto' : 'Nuevo Proyecto'}</h2>
+              <button className="ws-modal-close" onClick={cerrarModal}>✕</button>
+            </div>
+
+            <div className="ws-field">
+              <label>Nombre del proyecto</label>
+              <input name="nombre" value={form.nombre} onChange={handleForm} placeholder="Ej. Nuevo Proyecto" />
+            </div>
+            <div className="ws-field">
+              <label>Descripción</label>
+              <textarea name="descripcion" value={form.descripcion} onChange={handleForm} placeholder="Describe el proyecto..." />
+            </div>
+            <div className="ws-field ws-field-row">
+              <div>
+                <label>Fecha inicio</label>
+                <input type="date" name="fechaInicio" value={form.fechaInicio} onChange={handleForm} />
+              </div>
+              <div>
+                <label>Fecha fin</label>
+                <input type="date" name="fechaFin" value={form.fechaFin} onChange={handleForm} />
+              </div>
+            </div>
+            <div className="ws-field">
+              <label>Estado</label>
+              <select name="estado" value={form.estado} onChange={handleForm}>
+                {ESTADOS.map(e => <option key={e} value={e}>{LABEL[e]}</option>)}
+              </select>
+            </div>
+
+            <div className="ws-modal-footer">
+              <button className="ws-btn-secondary" onClick={cerrarModal}>Cancelar</button>
+              <button className="ws-btn-primary" onClick={guardar} disabled={guardando}>
+                {guardando ? 'Guardando...' : editando ? 'Actualizar' : 'Guardar'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
-    </div>
+    </AppLayout>
   );
 }
