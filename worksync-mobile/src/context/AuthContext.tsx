@@ -1,5 +1,3 @@
-"use client";
-
 import { createContext, useMemo, useState, useEffect, type ReactNode } from 'react';
 import type { AuthContextType, AuthResponse, User } from '../types/auth';
 import { clearAuth, loadAuth, saveAuth } from '../utils/storage';
@@ -48,7 +46,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-
   const login = (auth: AuthResponse) => {
     setUser(auth.user);
     setToken(auth.token);
@@ -70,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       logout,
     }),
-    [user, token, isLoading],
+    [user, token, isLoading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

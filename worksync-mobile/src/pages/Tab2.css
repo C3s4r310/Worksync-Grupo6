@@ -1,0 +1,628 @@
+/* Contenedor Principal */
+.tareas-page-content {
+  --background: #0b0f19;
+  background-color: #0b0f19;
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  color: #f8fafc;
+}
+
+/* Encabezado */
+.tareas-header {
+  padding: 16px 20px;
+  background-color: #070a12;
+  border-bottom: 1px solid #1e293b;
+}
+
+.tareas-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.tareas-header p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Sección de Filtros */
+.tareas-filters-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px;
+  background-color: #070a12;
+  border-bottom: 1px solid #1e293b;
+}
+
+.tareas-search-box {
+  position: relative;
+  width: 100%;
+}
+
+.tareas-search-input {
+  width: 100%;
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px 10px 38px;
+  color: #ffffff;
+  font-size: 13.5px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.tareas-search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.tareas-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 14px;
+}
+
+.tareas-selects-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+/* Selectores Glassmorphic */
+.tareas-filter-select {
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  color: #e2e8f0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  min-width: 130px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.tareas-filter-select:focus {
+  border-color: #3b82f6;
+}
+
+.tareas-filter-select option {
+  background-color: #0b0f19;
+  color: #ffffff;
+}
+
+.tareas-btn-search {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
+
+/* Botón flotante para crear */
+.tareas-fab-btn {
+  position: fixed;
+  bottom: 76px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+  color: #ffffff;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+  cursor: pointer;
+  z-index: 99;
+  transition: all 0.2s;
+}
+
+.tareas-fab-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Lista de Tarjetas (Cards) */
+.tareas-list-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 100px; /* Evitar que el FAB tape el contenido */
+}
+
+.tarea-card {
+  background-color: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tarea-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+  background-color: rgba(15, 23, 42, 0.7);
+}
+
+.tarea-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.tarea-card-proj {
+  font-size: 12px;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.tarea-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.tarea-card-user {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.tarea-badges-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Badges Prioridades */
+.badge-prioridad {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.badge-prioridad.baja {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+}
+
+.badge-prioridad.media {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+
+.badge-prioridad.alta {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.badge-prioridad.critica {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+}
+
+/* Badges Estados */
+.badge-estado {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.badge-estado.pendiente {
+  background-color: #1e293b;
+  color: #94a3b8;
+}
+
+.badge-estado.en_progreso {
+  background-color: rgba(37, 99, 235, 0.15);
+  color: #3b82f6;
+}
+
+.badge-estado.en_revision {
+  background-color: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+}
+
+.badge-estado.completada {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+/* Cambio Rápido de Estado */
+.tarea-status-select-wrap {
+  width: 100%;
+  margin-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 8px;
+}
+
+.tarea-card-status-select {
+  width: 100%;
+  background-color: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Paginación */
+.tareas-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: #070a12;
+  border-top: 1px solid #1e293b;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.tareas-page-btn {
+  background-color: #1e293b;
+  color: #ffffff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tareas-page-btn:disabled {
+  background-color: #0f172a;
+  color: #475569;
+  cursor: not-allowed;
+}
+
+/* Modales Premium */
+.tareas-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.tareas-modal {
+  width: 90%;
+  max-width: 500px;
+  max-height: 85%;
+  background-color: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.tareas-modal.large {
+  max-width: 650px;
+}
+
+@keyframes modalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.tareas-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #1e293b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tareas-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.tareas-modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.tareas-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.tareas-modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid #1e293b;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Campos de Formulario */
+.tareas-form-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.tareas-form-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.tareas-form-input, .tareas-form-select, .tareas-form-textarea {
+  width: 100%;
+  background-color: #0b0f19;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #ffffff;
+  font-size: 13.5px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.tareas-form-input:focus, .tareas-form-select:focus, .tareas-form-textarea:focus {
+  border-color: #3b82f6;
+}
+
+.tareas-form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Pestañas (Tabs) dentro del Modal de Detalles */
+.tareas-detail-tabs {
+  display: flex;
+  border-bottom: 1px solid #1e293b;
+  background-color: #0b0f19;
+}
+
+.tareas-detail-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  padding: 12px 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.tareas-detail-tab-btn.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.03);
+}
+
+/* Contenido de Tabs de Detalle */
+.tab-pane-content {
+  padding: 16px 0 0 0;
+}
+
+.detail-desc-block {
+  text-align: left;
+  line-height: 1.5;
+  font-size: 13.5px;
+  color: #cbd5e1;
+  margin-bottom: 16px;
+  background-color: rgba(255, 255, 255, 0.02);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.detail-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.detail-info-item span {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.detail-info-item p {
+  margin: 2px 0 0 0;
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+/* Feed de Comentarios */
+.comments-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+  margin-bottom: 14px;
+  padding-right: 4px;
+}
+
+.comment-bubble {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.comment-user {
+  font-weight: bold;
+  color: #38bdf8;
+}
+
+.comment-text {
+  font-size: 12.5px;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.comment-input-form {
+  display: flex;
+  gap: 8px;
+}
+
+.comment-text-input {
+  flex: 1;
+  background-color: #0b0f19;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+}
+
+.comment-send-btn {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Lista de Subtareas */
+.subtasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  text-align: left;
+}
+
+.subtask-title {
+  flex: 1;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.subtask-status {
+  font-size: 10px;
+}
+
+/* Historial de Auditoría (Bitácora) */
+.history-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.history-item {
+  position: relative;
+  padding-left: 18px;
+  border-left: 2px solid #1e293b;
+  text-align: left;
+}
+
+.history-item::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+}
+
+.history-header {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.history-desc {
+  font-size: 12.5px;
+  color: #cbd5e1;
+  margin: 2px 0;
+}
+
+.history-motif {
+  font-size: 12px;
+  color: #fbbf24;
+  font-style: italic;
+  margin: 0;
+}
