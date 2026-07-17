@@ -2,13 +2,12 @@
 FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 
-# Copiar pom.xml y descargar dependencias para aprovechar la caché de Docker
+# Copiar archivos del proyecto
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copiar el código fuente y compilar el JAR omitiendo los tests
 COPY src ./src
-RUN mvn clean package -DskipTests
+
+# Compilar el JAR omitiendo los tests en modo Batch (evita animaciones e inundar logs)
+RUN mvn clean package -DskipTests -B
 
 # ── ETAPA 2: EJECUCIÓN (JRE ligero) ──
 FROM eclipse-temurin:21-jre-alpine
@@ -19,6 +18,7 @@ COPY --from=build /app/target/worksync-0.0.1-SNAPSHOT.jar app.jar
 
 # Exponer el puerto por defecto (Render lo sobreescribirá)
 EXPOSE 8080
+
 
 # Comando de inicio seguro
 # -XX:MaxRAMPercentage=75.0 le dice a la JVM que no use más del 75% de la RAM del contenedor (evita OOM en Render)
