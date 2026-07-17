@@ -19,12 +19,14 @@ import com.worksync.worksync.DAO.userDAO;
 import com.worksync.worksync.model.HistorialCambioTarea;
 import com.worksync.worksync.model.Usuario;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class tareaSERVICIO {
 
     private static final int MAX_TAREAS_POR_COLABORADOR = 3;
@@ -309,6 +311,13 @@ public class tareaSERVICIO {
                     "El colaborador ya tiene " + tareasActivas + " tareas activas. " +
                             "Máximo permitido: " + MAX_TAREAS_POR_COLABORADOR + ".");
         }
+    }
+
+    public Tarea agregarEvidencia(Long tareaId, String url) {
+        Tarea tarea = tareaRepository.findByIdAndEliminadoLogicamenteFalse(tareaId)
+                .orElseThrow(() -> new RuntimeException("Tarea no encontrada con id: " + tareaId));
+        tarea.getEvidencias().add(url);
+        return tareaRepository.save(tarea);
     }
 
     // Conversión entidad → DTO
