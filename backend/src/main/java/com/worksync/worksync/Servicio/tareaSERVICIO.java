@@ -331,8 +331,8 @@ public class tareaSERVICIO {
         dto.setProyectoId(tarea.getProyectoId());
         dto.setFechaLimite(tarea.getFechaLimite());
         dto.setFechaCreacion(tarea.getFechaCreacion());
-        dto.setDependencias(tarea.getDependencias());
-        dto.setEvidencias(tarea.getEvidencias());
+        dto.setDependencias(tarea.getDependencias() != null ? new java.util.ArrayList<>(tarea.getDependencias()) : null);
+        dto.setEvidencias(tarea.getEvidencias() != null ? new java.util.ArrayList<>(tarea.getEvidencias()) : null);
         dto.setTareaPadreId(tarea.getTareaPadreId());
         if (tarea.getResponsable() != null) {
             try {
