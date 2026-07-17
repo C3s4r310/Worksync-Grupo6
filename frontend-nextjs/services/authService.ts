@@ -1,9 +1,10 @@
 import axios from 'axios';
+import { API_BASE_URL } from './apiConfig';
 import type { AuthRequest, AuthResponse, RegisterRequest } from '../types/auth';
 import { loadAuth } from '../utils/storage';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/api/auth',
+  baseURL: `${API_BASE_URL}/auth`,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -95,7 +96,7 @@ export async function recuperarContrasena(email: string, nuevaContrasena: string
 // RF-01: Cambiar contraseña personal del usuario logueado
 export async function cambiarContrasena(contrasenaActual: string, nuevaContrasena: string): Promise<void> {
   const auth = loadAuth();
-  const response = await fetch('http://localhost:8080/api/usuarios/cambiar-contrasena', {
+  const response = await fetch(`${API_BASE_URL}/usuarios/cambiar-contrasena`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

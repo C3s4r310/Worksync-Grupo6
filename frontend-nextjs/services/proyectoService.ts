@@ -2,7 +2,8 @@ import type { Proyecto, ProyectoRequest, FiltrosProyecto } from '../types/proyec
 import type { Page } from '../types/tarea'; // Aprovechamos la interfaz genérica que ya creamos en tareas
 
 // URL base del backend Spring Boot
-const BASE_URL = 'http://localhost:8080/api/proyectos';
+import { API_BASE_URL } from './apiConfig';
+const BASE_URL = `${API_BASE_URL}/proyectos`;
 
 import { loadAuth } from '../utils/storage';
 

@@ -1,7 +1,8 @@
 import type { Tarea, TareaRequest, Page, FiltrosTarea, Comentario } from '../types/tarea';
 
 // URL base del backend Spring Boot
-const BASE_URL = 'http://localhost:8080/api/tareas';
+import { API_BASE_URL } from './apiConfig';
+const BASE_URL = `${API_BASE_URL}/tareas`;
 
 import { loadAuth } from '../utils/storage';
 

@@ -1,7 +1,8 @@
 import type { ReporteDashboardData } from '../types/reporte';
 import { loadAuth } from '../utils/storage';
+import { API_BASE_URL } from './apiConfig';
 
-const BASE_URL = 'http://localhost:8080/api/reportes';
+const BASE_URL = `${API_BASE_URL}/reportes`;
 
 const getAuthHeader = (): HeadersInit => {
   const auth = loadAuth();

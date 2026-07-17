@@ -1,6 +1,7 @@
 import { loadAuth } from '../utils/storage';
+import { API_BASE_URL } from './apiConfig';
 
-const getBaseUrl = (proyectoId: number) => `http://localhost:8080/api/proyectos/${proyectoId}/miembros`;
+const getBaseUrl = (proyectoId: number) => `${API_BASE_URL}/proyectos/${proyectoId}/miembros`;
 
 const getAuthHeader = (): HeadersInit => {
   const auth = loadAuth();

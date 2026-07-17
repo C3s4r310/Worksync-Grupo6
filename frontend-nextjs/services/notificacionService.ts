@@ -1,7 +1,8 @@
 import type { Notificacion } from '../types/notificacion';
 import { loadAuth } from '../utils/storage';
+import { API_BASE_URL } from './apiConfig';
 
-const BASE_URL = 'http://localhost:8080/api/notificaciones';
+const BASE_URL = `${API_BASE_URL}/notificaciones`;
 
 const getAuthHeader = (): HeadersInit => {
   const auth = loadAuth();

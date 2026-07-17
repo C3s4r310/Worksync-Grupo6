@@ -1,7 +1,8 @@
 import type { DashboardData } from '../types/dashboard';
 import { loadAuth } from '../utils/storage';
+import { API_BASE_URL } from './apiConfig';
 
-const BASE_URL = 'http://localhost:8080/api/dashboard';
+const BASE_URL = `${API_BASE_URL}/dashboard`;
 
 const getAuthHeader = (): HeadersInit => {
   const auth = loadAuth();

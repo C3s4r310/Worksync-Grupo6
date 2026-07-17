@@ -1,7 +1,8 @@
 import { loadAuth } from '../utils/storage';
+import { API_BASE_URL } from './apiConfig';
 import { Mensaje, ProyectoMiembrosChat } from '../types/mensaje';
 
-const BASE_URL = 'http://localhost:8080/api/mensajes';
+const BASE_URL = `${API_BASE_URL}/mensajes`;
 
 const getAuthHeader = (): HeadersInit => {
   const auth = loadAuth();
