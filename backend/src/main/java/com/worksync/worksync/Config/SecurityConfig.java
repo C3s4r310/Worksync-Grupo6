@@ -25,8 +25,13 @@ public class SecurityConfig {
                 .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
 
-                        // Rutas públicas
-                        .requestMatchers("/api/auth/**").permitAll()
+                        // Rutas públicas (autenticación y documentación de API)
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
 
                         // RF-08: Solo ADMIN puede cambiar roles de plataforma
                         .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/rol").hasRole("ADMIN")
