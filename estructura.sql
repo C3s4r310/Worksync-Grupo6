@@ -2,7 +2,6 @@
 -- PostgreSQL database dump
 --
 
-\restrict 3vOxEQVhOkSp1kfCjJqgggfeZfq3oayewb9PXJJ7kf0Z9b98wpPkD1VeRqctlZQ
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -148,7 +147,6 @@ CREATE TABLE public.bitacora (
 );
 
 
-ALTER TABLE public.bitacora OWNER TO natsu;
 
 --
 -- Name: bitacora_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -163,7 +161,6 @@ CREATE SEQUENCE public.bitacora_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.bitacora_id_seq OWNER TO natsu;
 
 --
 -- Name: bitacora_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -185,7 +182,6 @@ CREATE TABLE public.comentarios_tarea (
 );
 
 
-ALTER TABLE public.comentarios_tarea OWNER TO natsu;
 
 --
 -- Name: comentarios_tarea_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -199,7 +195,6 @@ CREATE SEQUENCE public.comentarios_tarea_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.comentarios_tarea_id_seq OWNER TO natsu;
 
 --
 -- Name: comentarios_tarea_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -221,7 +216,6 @@ CREATE TABLE public.comments (
 );
 
 
-ALTER TABLE public.comments OWNER TO natsu;
 
 --
 -- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -236,7 +230,6 @@ CREATE SEQUENCE public.comments_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.comments_id_seq OWNER TO natsu;
 
 --
 -- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -261,7 +254,6 @@ CREATE TABLE public.historial_cambio_tarea (
 );
 
 
-ALTER TABLE public.historial_cambio_tarea OWNER TO postgres;
 
 --
 -- Name: historial_cambio_tarea_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -292,7 +284,6 @@ CREATE TABLE public.mensajes (
 );
 
 
-ALTER TABLE public.mensajes OWNER TO postgres;
 
 --
 -- Name: mensajes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -322,7 +313,6 @@ CREATE TABLE public.miembro_proyecto (
 );
 
 
-ALTER TABLE public.miembro_proyecto OWNER TO natsu;
 
 --
 -- Name: miembro_proyecto_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -336,7 +326,6 @@ CREATE SEQUENCE public.miembro_proyecto_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.miembro_proyecto_id_seq OWNER TO natsu;
 
 --
 -- Name: miembro_proyecto_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -358,7 +347,6 @@ CREATE TABLE public.notificaciones (
 );
 
 
-ALTER TABLE public.notificaciones OWNER TO postgres;
 
 --
 -- Name: notificaciones_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -389,7 +377,6 @@ CREATE TABLE public.progress (
 );
 
 
-ALTER TABLE public.progress OWNER TO natsu;
 
 --
 -- Name: progress_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -404,7 +391,6 @@ CREATE SEQUENCE public.progress_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.progress_id_seq OWNER TO natsu;
 
 --
 -- Name: progress_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -424,7 +410,6 @@ CREATE TABLE public.project_users (
 );
 
 
-ALTER TABLE public.project_users OWNER TO natsu;
 
 --
 -- Name: project_users_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -439,7 +424,6 @@ CREATE SEQUENCE public.project_users_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.project_users_id_seq OWNER TO natsu;
 
 --
 -- Name: project_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -462,7 +446,6 @@ CREATE TABLE public.projects (
 );
 
 
-ALTER TABLE public.projects OWNER TO natsu;
 
 --
 -- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -477,7 +460,6 @@ CREATE SEQUENCE public.projects_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.projects_id_seq OWNER TO natsu;
 
 --
 -- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -505,7 +487,6 @@ CREATE TABLE public.proyecto (
 );
 
 
-ALTER TABLE public.proyecto OWNER TO natsu;
 
 --
 -- Name: proyecto_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -519,7 +500,6 @@ CREATE SEQUENCE public.proyecto_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.proyecto_id_seq OWNER TO natsu;
 
 --
 -- Name: proyecto_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -538,7 +518,6 @@ CREATE TABLE public.roles (
 );
 
 
-ALTER TABLE public.roles OWNER TO natsu;
 
 --
 -- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -553,7 +532,6 @@ CREATE SEQUENCE public.roles_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.roles_id_seq OWNER TO natsu;
 
 --
 -- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -581,7 +559,6 @@ CREATE TABLE public.tarea (
 );
 
 
-ALTER TABLE public.tarea OWNER TO natsu;
 
 --
 -- Name: tarea_dependencias; Type: TABLE; Schema: public; Owner: natsu
@@ -593,7 +570,6 @@ CREATE TABLE public.tarea_dependencias (
 );
 
 
-ALTER TABLE public.tarea_dependencias OWNER TO natsu;
 
 --
 -- Name: tarea_evidencias; Type: TABLE; Schema: public; Owner: natsu
@@ -605,7 +581,6 @@ CREATE TABLE public.tarea_evidencias (
 );
 
 
-ALTER TABLE public.tarea_evidencias OWNER TO natsu;
 
 --
 -- Name: tarea_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -619,7 +594,6 @@ CREATE SEQUENCE public.tarea_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.tarea_id_seq OWNER TO natsu;
 
 --
 -- Name: tarea_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -639,7 +613,6 @@ CREATE TABLE public.task_dependencies (
 );
 
 
-ALTER TABLE public.task_dependencies OWNER TO natsu;
 
 --
 -- Name: task_dependencies_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -654,7 +627,6 @@ CREATE SEQUENCE public.task_dependencies_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.task_dependencies_id_seq OWNER TO natsu;
 
 --
 -- Name: task_dependencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -673,7 +645,6 @@ CREATE TABLE public.task_priority (
 );
 
 
-ALTER TABLE public.task_priority OWNER TO natsu;
 
 --
 -- Name: task_priority_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -688,7 +659,6 @@ CREATE SEQUENCE public.task_priority_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.task_priority_id_seq OWNER TO natsu;
 
 --
 -- Name: task_priority_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -707,7 +677,6 @@ CREATE TABLE public.task_status (
 );
 
 
-ALTER TABLE public.task_status OWNER TO natsu;
 
 --
 -- Name: task_status_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -722,7 +691,6 @@ CREATE SEQUENCE public.task_status_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.task_status_id_seq OWNER TO natsu;
 
 --
 -- Name: task_status_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -748,7 +716,6 @@ CREATE TABLE public.tasks (
 );
 
 
-ALTER TABLE public.tasks OWNER TO natsu;
 
 --
 -- Name: tasks_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -763,7 +730,6 @@ CREATE SEQUENCE public.tasks_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.tasks_id_seq OWNER TO natsu;
 
 --
 -- Name: tasks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -786,7 +752,6 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO natsu;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -801,7 +766,6 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.users_id_seq OWNER TO natsu;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -824,7 +788,6 @@ CREATE TABLE public.usuarios (
 );
 
 
-ALTER TABLE public.usuarios OWNER TO natsu;
 
 --
 -- Name: usuarios_id_seq; Type: SEQUENCE; Schema: public; Owner: natsu
@@ -838,7 +801,6 @@ CREATE SEQUENCE public.usuarios_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.usuarios_id_seq OWNER TO natsu;
 
 --
 -- Name: usuarios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: natsu
@@ -1418,5 +1380,4 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 3vOxEQVhOkSp1kfCjJqgggfeZfq3oayewb9PXJJ7kf0Z9b98wpPkD1VeRqctlZQ
 
