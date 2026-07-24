@@ -12,8 +12,31 @@ interface TareaCardProps {
   esGestor?: boolean;
 }
 
+const PRIORIDAD_ESTILO: Record<string, { color: string; bg: string; border: string }> = {
+  BAJA:    { color: '#34d399', bg: 'rgba(52, 211, 153, 0.12)', border: 'rgba(52, 211, 153, 0.2)' },
+  MEDIA:   { color: '#fbbf24', bg: 'rgba(251, 191, 36, 0.12)', border: 'rgba(251, 191, 36, 0.2)' },
+  ALTA:    { color: '#fb7185', bg: 'rgba(251, 113, 133, 0.12)', border: 'rgba(251, 113, 133, 0.2)' },
+  CRITICA: { color: '#c084fc', bg: 'rgba(192, 132, 252, 0.12)', border: 'rgba(192, 132, 252, 0.2)' },
+};
+
+const EditIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 20h9"/>
+    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 6h18"/>
+    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+  </svg>
+);
+
 export default function TareaCard({ tarea, onEditar, onEliminar, onVerDetalle, isBottleneck, esGestor = true }: TareaCardProps) {
   const prioridad = PRIORIDAD_CONFIG[tarea.prioridad];
+  const est = PRIORIDAD_ESTILO[tarea.prioridad] || PRIORIDAD_ESTILO.BAJA;
 
   return (
     <div className="tarea-card" onClick={() => onVerDetalle(tarea)} style={{ cursor: 'pointer' }}>
@@ -22,9 +45,9 @@ export default function TareaCard({ tarea, onEditar, onEliminar, onVerDetalle, i
         {isBottleneck && (
           <span 
             style={{ 
-              backgroundColor: '#fee2e2', color: '#ef4444', fontSize: '10.5px', 
-              padding: '2px 6px', fontWeight: 'bold', borderRadius: '4px', 
-              border: '1px solid #fca5a5', whiteSpace: 'nowrap'
+              backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#f87171', fontSize: '10.5px', 
+              padding: '2px 8px', fontWeight: 'bold', borderRadius: '4px', 
+              border: '1px solid rgba(239, 68, 68, 0.25)', whiteSpace: 'nowrap'
             }} 
             title="Esta tarea bloquea a otras tareas (Cuello de Botella)"
           >
@@ -36,7 +59,7 @@ export default function TareaCard({ tarea, onEditar, onEliminar, onVerDetalle, i
       {/* RF-14: Badge de prioridad con color según nivel */}
       <span
         className="tarea-prioridad"
-        style={{ backgroundColor: prioridad.bg, color: prioridad.color }}
+        style={{ backgroundColor: est.bg, color: est.color, borderColor: est.border, border: '1px solid' }}
       >
         {prioridad.label}
       </span>
@@ -53,18 +76,18 @@ export default function TareaCard({ tarea, onEditar, onEliminar, onVerDetalle, i
             onClick={() => onEditar(tarea)} 
             title="Editar"
             disabled={!esGestor}
-            style={{ opacity: esGestor ? 1 : 0.4, cursor: esGestor ? 'pointer' : 'not-allowed' }}
+            style={{ opacity: esGestor ? 1 : 0.4, cursor: esGestor ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            ✏️
+            <EditIcon />
           </button>
           <button 
             className="btn-eliminar" 
             onClick={() => onEliminar(tarea.id)} 
             title="Eliminar"
             disabled={!esGestor}
-            style={{ opacity: esGestor ? 1 : 0.4, cursor: esGestor ? 'pointer' : 'not-allowed' }}
+            style={{ opacity: esGestor ? 1 : 0.4, cursor: esGestor ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            🗑️
+            <TrashIcon />
           </button>
         </div>
       </div>

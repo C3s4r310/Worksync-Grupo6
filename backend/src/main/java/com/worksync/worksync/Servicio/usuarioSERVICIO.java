@@ -11,11 +11,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// RF-08 Roles y Permisos: Administración de perfiles (Admin, Líder, Colaborador).
 @Service
 public class usuarioSERVICIO {
 
     @Autowired
     private userDAO usuarioDAO;
+
+    @Autowired
+    private AuditoriaServicio auditoriaServicio;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -41,12 +45,16 @@ public class usuarioSERVICIO {
 
         try {
             Rol rol = Rol.valueOf(nuevoRol.toUpperCase());
+            String rolAnterior = usuario.getRol() != null ? usuario.getRol().name() : "N/A";
             usuario.setRol(rol);
+            usuarioDAO.save(usuario);
+            
+            // RF-28 Auditoría: Loguear cambio de rol
+            auditoriaServicio.registrarEvento("CAMBIAR_ROL", "Se cambió el rol global del usuario '" + usuario.getNombre() + "' (ID: " + id + ") de " + rolAnterior + " a " + rol.name());
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Rol inválido. Valores válidos: ADMIN, LIDER, COLABORADOR");
         }
 
-        usuarioDAO.save(usuario);
         return convertirADTO(usuario);
     }
 

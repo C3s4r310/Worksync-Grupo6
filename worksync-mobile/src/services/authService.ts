@@ -1,6 +1,22 @@
+import axios from 'axios';
+import { API_BASE_URL } from './apiConfig';
 import type { AuthRequest, AuthResponse, RegisterRequest } from '../types/auth';
 import { loadAuth } from '../utils/storage';
-import { db } from '../utils/localDb';
+
+const apiClient = axios.create({
+  baseURL: `${API_BASE_URL}/auth`,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+function getErrorMessage(error: unknown) {
+  if (axios.isAxiosError(error) && error.response?.data) {
+    const data = error.response.data;
+    return typeof data === 'string' ? data : 'Error de autenticación. Intenta de nuevo.';
+  }
+  return 'Error de autenticación. Intenta de nuevo.';
+}
 
 // Helper para decodificar la parte del payload del JWT en base64 de manera segura
 function decodeJwt(token: string): { sub?: string; rol?: string; id?: number; nombre?: string } | null {
@@ -19,96 +35,79 @@ function decodeJwt(token: string): { sub?: string; rol?: string; id?: number; no
   }
 }
 
-// Generador de JWT falsos para seguir decodificando de forma transparente
-function generateMockJwt(user: { id: number; nombre: string; correo: string; rol: string }): string {
-  const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT" }));
-  const payload = btoa(JSON.stringify({
-    sub: user.correo,
-    id: user.id,
-    nombre: user.nombre,
-    rol: user.rol,
-    exp: Math.floor(Date.now() / 1000) + 3600 * 24 // 24 Horas
-  }));
-  const signature = "mocksignature";
-  return `${header}.${payload}.${signature}`;
-}
-
 export async function login(data: AuthRequest): Promise<AuthResponse> {
-  // Simular latencia de red corta
-  await new Promise(resolve => setTimeout(resolve, 300));
-  
-  const user = db.usuarios.getByCorreo(data.email);
-  if (!user || user.contrasena !== data.password) {
-    throw new Error('Credenciales inválidas. Por favor intenta de nuevo.');
+  try {
+    // Backend espera: { correo, contrasena }
+    const response = await apiClient.post<string>('/login', {
+      correo: data.email,
+      contrasena: data.password,
+    });
+
+    const token = response.data;
+    const claims = decodeJwt(token);
+    const email = claims?.sub || data.email;
+    const rol = claims?.rol || 'COLABORADOR';
+    const id = claims?.id || undefined;
+    const username = claims?.nombre || email.split('@')[0];
+
+    // Devuelve el token envuelto en AuthResponse con los datos decodificados
+    return {
+      token,
+      user: { id, username, email, rol },
+    };
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
   }
-
-  // Guardar última conexión
-  db.usuarios.update(user.id, { ultimaConexion: new Date().toISOString() });
-
-  const token = generateMockJwt(user);
-  return {
-    token,
-    user: {
-      id: user.id,
-      username: user.nombre,
-      email: user.correo,
-      rol: user.rol
-    }
-  };
 }
 
 export async function register(data: RegisterRequest): Promise<AuthResponse> {
-  await new Promise(resolve => setTimeout(resolve, 300));
+  try {
+    // Backend espera: { nombre, correo, contrasena, rol } — endpoint: /registro
+    await apiClient.post('/registro', {
+      nombre: data.username,
+      correo: data.email,
+      contrasena: data.password,
+      rol: data.rol,
+    });
 
-  const existing = db.usuarios.getByCorreo(data.email);
-  if (existing) {
-    throw new Error('El correo electrónico ya se encuentra registrado.');
+    // Tras registrar, hacemos login automático para obtener el token
+    return await login({ email: data.email, password: data.password });
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
   }
-
-  const newUser = db.usuarios.create({
-    nombre: data.username,
-    correo: data.email,
-    contrasena: data.password,
-    rol: data.rol || 'COLABORADOR',
-    ultimaConexion: new Date().toISOString()
-  });
-
-  const token = generateMockJwt(newUser);
-  return {
-    token,
-    user: {
-      id: newUser.id,
-      username: newUser.nombre,
-      email: newUser.correo,
-      rol: newUser.rol
-    }
-  };
 }
 
 // RF-01: Recuperar contraseña de un usuario
 export async function recuperarContrasena(email: string, nuevaContrasena: string): Promise<string> {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  const user = db.usuarios.getByCorreo(email);
-  if (!user) {
-    throw new Error('El correo electrónico no existe en el sistema.');
+  try {
+    const response = await apiClient.post<string>('/recuperar-contrasena', {
+      correo: email,
+      nuevaContrasena: nuevaContrasena
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      throw new Error(String(error.response.data));
+    }
+    throw new Error('Error al intentar recuperar la contraseña. Intente de nuevo.');
   }
-
-  db.usuarios.update(user.id, { contrasena: nuevaContrasena });
-  return 'Contraseña restablecida exitosamente en el almacenamiento local.';
 }
 
 // RF-01: Cambiar contraseña personal del usuario logueado
 export async function cambiarContrasena(contrasenaActual: string, nuevaContrasena: string): Promise<void> {
-  await new Promise(resolve => setTimeout(resolve, 200));
   const auth = loadAuth();
-  if (!auth || !auth.user || !auth.user.id) {
-    throw new Error('Sesión no válida.');
-  }
+  const response = await fetch(`${API_BASE_URL}/usuarios/cambiar-contrasena`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth?.token ?? ''}`,
+    },
+    body: JSON.stringify({ contrasenaActual, nuevaContrasena }),
+  });
 
-  const user = db.usuarios.getById(auth.user.id);
-  if (!user || user.contrasena !== contrasenaActual) {
-    throw new Error('La contraseña actual es incorrecta.');
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al cambiar la contraseña');
   }
-
-  db.usuarios.update(user.id, { contrasena: nuevaContrasena });
 }
+

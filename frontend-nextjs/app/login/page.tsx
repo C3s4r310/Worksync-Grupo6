@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { login as loginRequest } from '@/services/authService';
 import useAuth from '@/hooks/useAuth';
 
+// RF-01 Autenticación y Seguridad: Formulario de inicio de sesión.
 export default function Login() {
   const auth = useAuth();
   const router = useRouter();

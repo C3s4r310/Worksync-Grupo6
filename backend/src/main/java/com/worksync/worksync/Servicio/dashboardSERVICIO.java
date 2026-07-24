@@ -21,6 +21,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// RF-19 Dashboard Ejecutivo: Paneles de KPIs y resumen ejecutivo de proyectos y tareas.
+// RF-17 Historial: Feed de actividad reciente de cambios de estado y bitácora.
 @Service
 @org.springframework.transaction.annotation.Transactional(readOnly = true)
 public class dashboardSERVICIO {

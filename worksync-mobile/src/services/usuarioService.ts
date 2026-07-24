@@ -1,4 +1,15 @@
-import { db } from '../utils/localDb';
+import { loadAuth } from '../utils/storage';
+import { API_BASE_URL } from './apiConfig';
+
+const BASE_URL = `${API_BASE_URL}/usuarios`;
+
+const getAuthHeader = (): HeadersInit => {
+  const auth = loadAuth();
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${auth?.token ?? ''}`,
+  };
+};
 
 export interface UsuarioDTO {
   id: number;
@@ -9,25 +20,30 @@ export interface UsuarioDTO {
 
 // RF-08: Listar todos los usuarios
 export const obtenerUsuarios = async (): Promise<UsuarioDTO[]> => {
-  await new Promise(resolve => setTimeout(resolve, 150));
-  
-  const list = db.usuarios.getAll();
-  return list.map(u => ({
-    id: u.id,
-    nombre: u.nombre,
-    correo: u.correo,
-    rol: u.rol
-  }));
+  const response = await fetch(BASE_URL, {
+    headers: getAuthHeader(),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al obtener los usuarios del sistema');
+  }
+
+  return response.json();
 };
 
 // RF-08: Cambiar rol de un usuario
 export const cambiarRolUsuario = async (id: number, rol: string): Promise<UsuarioDTO> => {
-  await new Promise(resolve => setTimeout(resolve, 200));
-  const updated = db.usuarios.update(id, { rol });
-  return {
-    id: updated.id,
-    nombre: updated.nombre,
-    correo: updated.correo,
-    rol: updated.rol
-  };
+  const response = await fetch(`${BASE_URL}/${id}/rol`, {
+    method: 'PUT',
+    headers: getAuthHeader(),
+    body: JSON.stringify({ rol }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al cambiar el rol del usuario');
+  }
+
+  return response.json();
 };

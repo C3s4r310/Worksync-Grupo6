@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+// RF-08 Roles y Permisos: Administración de perfiles (Admin, Líder, Colaborador).
 @RestController
 @RequestMapping("/api/usuarios")
 @CrossOrigin(origins = "*")

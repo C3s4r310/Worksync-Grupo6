@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { register as registerRequest } from '@/services/authService';
 import useAuth from '@/hooks/useAuth';
 
+// RF-01 Autenticación y Seguridad: Formulario de registro de usuarios.
 export default function Register() {
   const auth = useAuth();
   const router = useRouter();

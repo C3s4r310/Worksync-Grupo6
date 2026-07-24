@@ -25,6 +25,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// RF-03 Gestión de Tareas: CRUD básico de tareas.
+// RF-04 Asignación Inteligente: Asignación de tareas validando carga y rol (máximo 3 tareas activas por COLABORADOR).
+// RF-05 Control de Estados: Cambio de estados con máquina de estados y registro de bitácora.
+// RF-11 Dependencias & RF-13 Bloqueos: Control de prerrequisitos antes de iniciar/completar una tarea.
+// RF-14 Priorización: Manejo de prioridades (CRÍTICA, ALTA, MEDIA, BAJA).
+// RF-15 Subtareas: Desglose y relación jerárquica de tareas principales y subtareas.
+// RF-17 Historial: Registro cronológico de cambios de estado y motivos.
 @Service
 @Transactional
 public class tareaSERVICIO {

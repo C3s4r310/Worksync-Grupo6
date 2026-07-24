@@ -15,6 +15,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+// RF-03 Gestión de Tareas: CRUD básico de tareas.
+// RF-05 Control de Estados: Cambio de estados (pendiente, en progreso, etc.).
+// RF-15 Subtareas: Desglose y listado de subtareas.
+// RF-17 Historial: Trazabilidad de cambios de estado de tareas.
 @RestController
 @RequestMapping("/api/tareas")
 @CrossOrigin(origins = "*")

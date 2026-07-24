@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+// RF-12 Alertas & RF-23 Notificaciones: Escaneo diario automático de tareas próximas a vencer o vencidas, alertas por correo (consola) e internas en base de datos.
 @Service
 public class AlertaProgramadaServicio {
 

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// RF-18 Comentarios: Hilo de conversación y notas en las tareas.
 @RestController
 @RequestMapping("/api/tareas/{tareaId}/comentarios")
 @CrossOrigin(origins = "*")

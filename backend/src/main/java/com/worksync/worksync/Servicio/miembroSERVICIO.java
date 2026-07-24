@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// RF-09 Miembros del Proyecto: Asignación de usuarios a proyectos.
 @Service
 public class miembroSERVICIO {
 
@@ -24,6 +25,9 @@ public class miembroSERVICIO {
 
     @Autowired
     private userDAO usuarioDAO;
+
+    @Autowired
+    private AuditoriaServicio auditoriaServicio;
 
     // RF-09: Agregar miembro a un proyecto
     public miembroDTO agregarMiembro(Long proyectoId, Long usuarioId, String rol) {
@@ -57,6 +61,8 @@ public class miembroSERVICIO {
                 m.setActivo(true);
                 m.setRol(rolEnum);
                 miembroRepository.save(m);
+                // RF-28 Auditoría: Loguear reactivación de miembro
+                auditoriaServicio.registrarEvento("AGREGAR_MIEMBRO", "Se reactivó al miembro '" + usuario.getNombre() + "' (ID: " + usuarioId + ") en el proyecto ID: " + proyectoId + " con el rol: " + rolEnum.name());
             }
         });
 
@@ -67,6 +73,8 @@ public class miembroSERVICIO {
             miembro.setUsuarioId(usuarioId);
             miembro.setRol(rolEnum);
             miembroRepository.save(miembro);
+            // RF-28 Auditoría: Loguear adición de miembro
+            auditoriaServicio.registrarEvento("AGREGAR_MIEMBRO", "Se agregó al miembro '" + usuario.getNombre() + "' (ID: " + usuarioId + ") al proyecto ID: " + proyectoId + " con el rol: " + rolEnum.name());
         }
 
         MiembroProyecto guardado = miembroRepository
@@ -84,6 +92,11 @@ public class miembroSERVICIO {
 
         miembro.setActivo(false);
         miembroRepository.save(miembro);
+
+        // RF-28 Auditoría: Loguear remoción de miembro
+        Usuario usuario = usuarioDAO.findById(usuarioId).orElse(null);
+        String nombre = usuario != null ? usuario.getNombre() : "ID: " + usuarioId;
+        auditoriaServicio.registrarEvento("RETIRAR_MIEMBRO", "Se retiró al miembro '" + nombre + "' (ID: " + usuarioId + ") del proyecto ID: " + proyectoId);
     }
 
     // RF-09: Listar miembros activos de un proyecto

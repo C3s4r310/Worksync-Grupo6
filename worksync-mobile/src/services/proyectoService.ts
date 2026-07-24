@@ -1,86 +1,85 @@
 import type { Proyecto, ProyectoRequest, FiltrosProyecto } from '../types/proyecto';
-import type { Page } from '../types/tarea';
-import { db } from '../utils/localDb';
+import type { Page } from '../types/tarea'; // Aprovechamos la interfaz genérica que ya creamos en tareas
+
+// URL base del backend Spring Boot
+import { API_BASE_URL } from './apiConfig';
+const BASE_URL = `${API_BASE_URL}/proyectos`;
+
 import { loadAuth } from '../utils/storage';
+
+// Obtiene el token JWT guardado en localStorage
+const getAuthHeader = (): HeadersInit => {
+  const auth = loadAuth();
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${auth?.token ?? ''}`,
+  };
+};
 
 // RF-02: Crear un proyecto
 export const crearProyecto = async (datos: ProyectoRequest): Promise<Proyecto> => {
-  await new Promise(resolve => setTimeout(resolve, 200));
-  const auth = loadAuth();
-  const userName = auth?.user?.username || 'Sistema';
-
-  const newProj = db.proyectos.create({
-    nombre: datos.nombre,
-    descripcion: datos.descripcion || '',
-    estado: datos.estado || 'ACTIVO',
-    fechaInicio: datos.fechaInicio || new Date().toISOString().split('T')[0],
-    fechaFin: datos.fechaFin || '',
-    prioridad: datos.prioridad || 'MEDIA',
-    responsable: userName
+  const response = await fetch(BASE_URL, {
+    method: 'POST',
+    headers: getAuthHeader(),
+    body: JSON.stringify(datos),
   });
 
-  // Al crear un proyecto, agregar automáticamente al creador como Líder de Proyecto
-  if (auth?.user?.id) {
-    db.miembros.create({
-      proyectoId: newProj.id,
-      usuarioId: auth.user.id,
-      rol: 'LIDER'
-    });
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al crear el proyecto');
   }
 
-  return newProj as unknown as Proyecto;
+  return response.json();
 };
 
 // RF-02: Editar un proyecto
 export const editarProyecto = async (id: number, datos: Partial<ProyectoRequest>): Promise<Proyecto> => {
-  await new Promise(resolve => setTimeout(resolve, 200));
-  const updated = db.proyectos.update(id, datos);
-  return updated as unknown as Proyecto;
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: 'PUT',
+    headers: getAuthHeader(),
+    body: JSON.stringify(datos),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al actualizar el proyecto');
+  }
+
+  return response.json();
 };
 
 // RF-02: Eliminar proyecto (lógicamente)
 export const eliminarProyecto = async (id: number): Promise<void> => {
-  await new Promise(resolve => setTimeout(resolve, 200));
-  db.proyectos.delete(id);
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeader(),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al eliminar el proyecto');
+  }
 };
 
 // --- LO NUEVO PARA TUS FILTROS (RF-24 y RNF-01) ---
 export const buscarProyectos = async (filtros: FiltrosProyecto): Promise<Page<Proyecto>> => {
-  await new Promise(resolve => setTimeout(resolve, 150));
+  const params = new URLSearchParams();
   
-  let list = db.proyectos.getAll();
-
-  // Filtrar por estado
-  if (filtros.estado) {
-    list = list.filter(p => p.estado === filtros.estado);
-  }
-
-  // Filtrar por palabra clave (nombre o descripción)
-  if (filtros.palabraClave) {
-    const query = filtros.palabraClave.toLowerCase();
-    list = list.filter(p => 
-      p.nombre.toLowerCase().includes(query) || 
-      p.descripcion.toLowerCase().includes(query)
-    );
-  }
-
-  // Filtrar por fecha de inicio
-  if (filtros.fechaInicio) {
-    list = list.filter(p => p.fechaInicio >= (filtros.fechaInicio || ''));
-  }
-
-  const page = filtros.page || 0;
-  const size = filtros.size || 10;
-  const totalElements = list.length;
-  const totalPages = Math.max(1, Math.ceil(totalElements / size));
+  if (filtros.estado) params.append('estado', filtros.estado);
+  if (filtros.fechaInicio) params.append('fechaInicio', filtros.fechaInicio);
+  if (filtros.palabraClave) params.append('palabraClave', filtros.palabraClave);
   
-  const content = list.slice(page * size, (page + 1) * size) as unknown as Proyecto[];
+  // Paginación por defecto para RNF-01 (Rendimiento)
+  params.append('page', (filtros.page || 0).toString());
+  params.append('size', (filtros.size || 10).toString());
 
-  return {
-    content,
-    totalElements,
-    totalPages,
-    size,
-    number: page
-  };
+  const response = await fetch(`${BASE_URL}/buscar?${params.toString()}`, {
+    headers: getAuthHeader(),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al realizar la búsqueda de proyectos');
+  }
+
+  return response.json(); // Tu método buscarYFiltrarProyectos de Java devuelve un JSON paginado
 };

@@ -8,6 +8,8 @@ import AppLayout from '@/components/AppLayout';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import useAuth from '@/hooks/useAuth';
 
+// RF-09 Miembros del Proyecto: Gestión de miembros (listar, agregar, retirar).
+// RF-08 Roles y Permisos: Validación de permisos para administrar miembros.
 export default function ProyectoMiembrosPage() {
   const params = useParams();
   const router = useRouter();

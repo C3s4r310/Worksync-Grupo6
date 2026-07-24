@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+// RF-07 Progreso: Cálculo de porcentaje de completitud de proyectos activos.
+// RF-19 Dashboard Ejecutivo: Paneles de KPIs analíticos de rendimiento de tareas y colaboradores.
+// RF-20 Carga de trabajo & RF-21 Reportes: Distribución de tareas y rendimiento por colaborador (a tiempo vs retrasadas).
 @Service
 public class reporteSERVICIO {
 

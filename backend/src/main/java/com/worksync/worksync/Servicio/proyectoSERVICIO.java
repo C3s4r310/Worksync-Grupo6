@@ -14,24 +14,36 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// RF-02 Gestión de Proyectos: CRUD de proyectos con fechas y responsables.
+// RF-25 Cierre de Proyecto & RF-26 Reapertura: Parcialmente soportados a través de edición de estado (falta validación compleja de tareas pendientes).
 @Service
 public class proyectoSERVICIO {
 
     @Autowired
     private ProyectoRepository proyectoRepository;
 
+    @Autowired
+    private com.worksync.worksync.DAO.TareaRepository tareaRepository;
+
+    @Autowired
+    private AuditoriaServicio auditoriaServicio;
+
     // RF-02: Crear proyecto
     public proyectoDTO crearProyecto(proyectoDTO dto) {
         Proyecto proyecto = new Proyecto();
         proyecto.setNombre(dto.getNombre());
         proyecto.setDescripcion(dto.getDescripcion());
-        proyecto.setEstado(dto.getEstado() != null ? dto.getEstado() : "ACTIVO");
+        proyecto.setEstado(dto.getEstado() != null ? dto.getEstado().toUpperCase() : "ACTIVO");
         proyecto.setFechaInicio(dto.getFechaInicio());
         proyecto.setFechaFin(dto.getFechaFin());
         proyecto.setPrioridad(dto.getPrioridad() != null ? dto.getPrioridad() : "MEDIA");
         proyecto.setResponsable(dto.getResponsable());
 
         Proyecto guardado = proyectoRepository.save(proyecto);
+        
+        // RF-28 Auditoría: Loguear creación de proyecto
+        auditoriaServicio.registrarEvento("CREAR_PROYECTO", "Se creó el proyecto '" + guardado.getNombre() + "' (ID: " + guardado.getId() + ") con responsable: " + guardado.getResponsable());
+        
         return convertirADTO(guardado);
     }
 
@@ -48,13 +60,38 @@ public class proyectoSERVICIO {
         Proyecto proyecto = proyectoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con id: " + id));
 
-        if (dto.getNombre() != null) proyecto.setNombre(dto.getNombre());
-        if (dto.getDescripcion() != null) proyecto.setDescripcion(dto.getDescripcion());
-        if (dto.getEstado() != null) proyecto.setEstado(dto.getEstado());
-        if (dto.getFechaInicio() != null) proyecto.setFechaInicio(dto.getFechaInicio());
-        if (dto.getFechaFin() != null) proyecto.setFechaFin(dto.getFechaFin());
-        if (dto.getPrioridad() != null) proyecto.setPrioridad(dto.getPrioridad());
-        if (dto.getResponsable() != null) proyecto.setResponsable(dto.getResponsable());
+        boolean editadoInfo = false;
+
+        if (dto.getNombre() != null) { proyecto.setNombre(dto.getNombre()); editadoInfo = true; }
+        if (dto.getDescripcion() != null) { proyecto.setDescripcion(dto.getDescripcion()); editadoInfo = true; }
+        if (dto.getFechaInicio() != null) { proyecto.setFechaInicio(dto.getFechaInicio()); editadoInfo = true; }
+        if (dto.getFechaFin() != null) { proyecto.setFechaFin(dto.getFechaFin()); editadoInfo = true; }
+        if (dto.getPrioridad() != null) { proyecto.setPrioridad(dto.getPrioridad()); editadoInfo = true; }
+        if (dto.getResponsable() != null) { proyecto.setResponsable(dto.getResponsable()); editadoInfo = true; }
+
+        if (dto.getEstado() != null) {
+            String nuevoEstado = dto.getEstado().toUpperCase();
+            if ("FINALIZADO".equals(nuevoEstado) && !"FINALIZADO".equals(proyecto.getEstado())) {
+                // RF-25 Cierre: Validar que no existan tareas pendientes
+                List<com.worksync.worksync.model.Tarea> tareasActivas = tareaRepository.findByProyectoIdAndEliminadoLogicamenteFalse(id)
+                        .stream()
+                        .filter(t -> t.getEstado() != com.worksync.worksync.model.EstadoTarea.COMPLETADA && t.getEstado() != com.worksync.worksync.model.EstadoTarea.CANCELADA)
+                        .collect(Collectors.toList());
+                if (!tareasActivas.isEmpty()) {
+                    throw new RuntimeException("No se puede cerrar el proyecto porque tiene " + tareasActivas.size() + " tareas activas pendientes.");
+                }
+                // RF-28 Auditoría: Loguear cierre de proyecto
+                auditoriaServicio.registrarEvento("CIERRE_PROYECTO", "Se finalizó/cerró exitosamente el proyecto '" + proyecto.getNombre() + "' (ID: " + id + ")");
+            } else if ("ACTIVO".equals(nuevoEstado) && "FINALIZADO".equals(proyecto.getEstado())) {
+                // RF-26 Reapertura: Loguear reapertura de proyecto
+                auditoriaServicio.registrarEvento("REAPERTURA_PROYECTO", "Se reabrió el proyecto '" + proyecto.getNombre() + "' (ID: " + id + ")");
+            } else if (!nuevoEstado.equals(proyecto.getEstado())) {
+                auditoriaServicio.registrarEvento("CAMBIAR_ESTADO_PROYECTO", "Se cambió el estado del proyecto '" + proyecto.getNombre() + "' (ID: " + id + ") de " + proyecto.getEstado() + " a " + nuevoEstado);
+            }
+            proyecto.setEstado(nuevoEstado);
+        } else if (editadoInfo) {
+            auditoriaServicio.registrarEvento("EDITAR_PROYECTO", "Se editó la información del proyecto '" + proyecto.getNombre() + "' (ID: " + id + ")");
+        }
 
         Proyecto actualizado = proyectoRepository.save(proyecto);
         return convertirADTO(actualizado);
@@ -66,6 +103,9 @@ public class proyectoSERVICIO {
                 .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con id: " + id));
         proyecto.setEliminadoLogicamente(true);
         proyectoRepository.save(proyecto);
+        
+        // RF-28 Auditoría: Loguear eliminación
+        auditoriaServicio.registrarEvento("ELIMINAR_PROYECTO", "Se eliminó lógicamente el proyecto '" + proyecto.getNombre() + "' (ID: " + id + ")");
     }
 
     // Verifica si un proyecto existe (usado por tareaSERVICIO)

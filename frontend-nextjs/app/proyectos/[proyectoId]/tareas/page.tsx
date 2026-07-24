@@ -47,6 +47,13 @@ const PRIORIDAD_ICONO: Record<string, string> = {
   BAJA: '↓', MEDIA: '→', ALTA: '↑', CRITICA: '↑↑',
 };
 
+// RF-03 Gestión de Tareas: CRUD básico y vistas.
+// RF-04 Asignación Inteligente: Selección de miembros responsables del proyecto.
+// RF-05 Control de Estados & RF-10 Tablero Kanban: Cambios de estado y visualización interactiva en tablero.
+// RF-06 Evidencias & RF-18 Comentarios: Adjunto de archivos, enlaces URL e hilos de conversación.
+// RF-11 Dependencias, RF-13 Bloqueos & RF-15 Subtareas: Relaciones, prerrequisitos y desglose.
+// RF-14 Priorización: Visualización e iconografía de niveles de prioridad de tareas.
+// RF-17 Historial: Visualización de bitácora y auditoría de cambios de estado.
 export default function TareasPage() {
   const { user } = useAuth();
   const esGestor = user?.rol === 'ADMIN' || user?.rol === 'LIDER';
@@ -472,8 +479,8 @@ export default function TareasPage() {
               onClick={e => e.stopPropagation()} 
               style={{ maxWidth: '850px', width: '95%', maxHeight: '90vh', overflowY: 'auto', padding: '24px' }}
             >
-              <div className="ws-modal-header" style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
-                <h2 className="ws-modal-title" style={{ fontSize: '20px', fontWeight: 700, color: '#0f172a' }}>
+              <div className="ws-modal-header" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
+                <h2 className="ws-modal-title" style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)' }}>
                   Detalles de la Tarea #{tareaDetalle.id}
                 </h2>
                 <button className="ws-modal-close" onClick={() => setTareaDetalle(null)}>✕</button>
@@ -487,23 +494,23 @@ export default function TareasPage() {
                   
                   {/* Título & Descripción */}
                   <div>
-                    <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1e293b', margin: '0 0 6px 0' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
                       {tareaDetalle.titulo}
                     </h3>
-                    <p style={{ fontSize: '14.5px', color: '#475569', margin: 0, whiteSpace: 'pre-wrap', lineHeight: 1.5 }}>
+                    <p style={{ fontSize: '14.5px', color: 'var(--text-secondary)', margin: 0, whiteSpace: 'pre-wrap', lineHeight: 1.5 }}>
                       {tareaDetalle.descripcion || 'Sin descripción detallada.'}
                     </p>
                   </div>
 
                   {/* Subtareas (RF-15) */}
-                  <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', backgroundColor: '#f8fafc' }}>
-                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b', margin: '0 0 10px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 10px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span>📂</span> Subtareas
                     </h4>
                     {cargandoSubtareas ? (
-                      <div style={{ fontSize: '13px', color: '#64748b' }}>Cargando subtareas...</div>
+                      <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Cargando subtareas...</div>
                     ) : subtareas.length === 0 ? (
-                      <div style={{ fontSize: '13px', color: '#64748b', fontStyle: 'italic', marginBottom: '10px' }}>Esta tarea no tiene subtareas asociadas.</div>
+                      <div style={{ fontSize: '13px', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '10px' }}>Esta tarea no tiene subtareas asociadas.</div>
                     ) : (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>
                         {subtareas.map(sub => (
@@ -511,18 +518,18 @@ export default function TareasPage() {
                             key={sub.id} 
                             style={{ 
                               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                              backgroundColor: '#fff', padding: '8px 12px', borderRadius: '6px',
-                              border: '1px solid #e2e8f0', fontSize: '13px'
+                              backgroundColor: 'rgba(255, 255, 255, 0.03)', padding: '8px 12px', borderRadius: '6px',
+                              border: '1px solid var(--border)', fontSize: '13px'
                             }}
                           >
-                            <span style={{ fontWeight: 550, textDecoration: sub.estado === 'COMPLETADA' ? 'line-through' : 'none' }}>
+                            <span style={{ fontWeight: 550, textDecoration: sub.estado === 'COMPLETADA' ? 'line-through' : 'none', color: 'var(--text-primary)' }}>
                               {sub.titulo}
                             </span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                               <span className={ESTADOS[sub.estado] ?? 'ws-badge'} style={{ fontSize: '10px', padding: '2px 6px' }}>
                                 {LABEL_ESTADO[sub.estado] ?? sub.estado}
                               </span>
-                              <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 'bold' }}>
+                              <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold' }}>
                                 {PRIORIDAD_ICONO[sub.prioridad]}
                               </span>
                             </div>
@@ -532,8 +539,8 @@ export default function TareasPage() {
                     )}
 
                     {/* Formulario rápido para agregar subtarea */}
-                    <form onSubmit={handleCrearSubtarea} style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderTop: '1px solid #e2e8f0', paddingTop: '10px' }}>
-                      <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}>Nueva Subtarea Rápida</span>
+                    <form onSubmit={handleCrearSubtarea} style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderTop: '1px solid var(--border)', paddingTop: '10px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Nueva Subtarea Rápida</span>
                       <div style={{ display: 'flex', gap: '6px' }}>
                         <input 
                           type="text" 
@@ -584,8 +591,8 @@ export default function TareasPage() {
                   </div>
 
                   {/* Evidencias (RF-06) */}
-                  <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px' }}>
-                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b', margin: '0 0 10px 0' }}>
+                  <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 10px 0' }}>
                       📎 Evidencias e Información Adjunta
                     </h4>
                     {tareaDetalle.evidencias && tareaDetalle.evidencias.length > 0 ? (
@@ -593,10 +600,10 @@ export default function TareasPage() {
                         {tareaDetalle.evidencias.map((url, idx) => (
                           <li key={idx} style={{ fontSize: '13.5px' }}>
                             <a 
-                              href={url.startsWith('http') ? url : `https://${url}`} 
+                                      href={url.startsWith('http') ? url : `https://${url}`} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              style={{ color: '#2563eb', textDecoration: 'underline', wordBreak: 'break-all' }}
+                              style={{ color: 'var(--accent-secondary)', textDecoration: 'underline', wordBreak: 'break-all' }}
                             >
                               {url.includes('/uploads/') ? `📄 Archivo Adjunto (${url.substring(url.lastIndexOf('/') + 1)})` : url}
                             </a>
@@ -604,14 +611,14 @@ export default function TareasPage() {
                         ))}
                       </ul>
                     ) : (
-                      <p style={{ fontSize: '13px', color: '#64748b', fontStyle: 'italic', margin: '0 0 12px 0' }}>No hay evidencias en esta tarea.</p>
+                      <p style={{ fontSize: '13px', color: 'var(--text-muted)', fontStyle: 'italic', margin: '0 0 12px 0' }}>No hay evidencias en esta tarea.</p>
                     )}
 
                     {/* Subida y enlace de evidencias */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', borderTop: '1px solid #f1f5f9', paddingTop: '10px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', borderTop: '1px solid var(--border)', paddingTop: '10px' }}>
                       {/* Subir archivo local */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}>Cargar Archivo Local</span>
+                        <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Cargar Archivo Local</span>
                         <div style={{ display: 'flex', gap: '4px' }}>
                           <input 
                             type="file" 
@@ -632,7 +639,7 @@ export default function TareasPage() {
 
                       {/* Registrar Enlace */}
                       <form onSubmit={handleAddEvidenciaUrl} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}>Agregar Enlace Web</span>
+                        <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Agregar Enlace Web</span>
                         <div style={{ display: 'flex', gap: '4px' }}>
                           <input 
                             type="url" 
@@ -656,30 +663,30 @@ export default function TareasPage() {
                   </div>
 
                   {/* Comentarios (RF-18) */}
-                  <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px' }}>
-                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b', margin: '0 0 10px 0' }}>
+                  <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 10px 0' }}>
                       💬 Comentarios
                     </h4>
                     {cargandoComentarios ? (
-                      <div style={{ fontSize: '13px', color: '#64748b' }}>Cargando comentarios...</div>
+                      <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Cargando comentarios...</div>
                     ) : comentarios.length === 0 ? (
-                      <p style={{ fontSize: '13px', color: '#64748b', fontStyle: 'italic', margin: '0 0 12px 0' }}>No hay comentarios todavía. ¡Sé el primero!</p>
+                      <p style={{ fontSize: '13px', color: 'var(--text-muted)', fontStyle: 'italic', margin: '0 0 12px 0' }}>No hay comentarios todavía. ¡Sé el primero!</p>
                     ) : (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '180px', overflowY: 'auto', paddingRight: '4px', marginBottom: '12px' }}>
                         {comentarios.map(c => (
-                          <div key={c.id} style={{ backgroundColor: '#f8fafc', padding: '8px 12px', borderRadius: '6px', borderLeft: '3px solid #2563eb' }}>
+                          <div key={c.id} style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', padding: '8px 12px', borderRadius: '6px', borderLeft: '3px solid var(--accent)' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
-                              <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#334155' }}>{c.usuarioNombre || `Usuario #${c.usuarioId}`}</span>
-                              <span style={{ fontSize: '11px', color: '#94a3b8' }}>{new Date(c.fechaCreacion).toLocaleString()}</span>
+                              <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)' }}>{c.usuarioNombre || `Usuario #${c.usuarioId}`}</span>
+                              <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{new Date(c.fechaCreacion).toLocaleString()}</span>
                             </div>
-                            <p style={{ fontSize: '13px', color: '#475569', margin: 0 }}>{c.contenido}</p>
+                            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0 }}>{c.contenido}</p>
                           </div>
                         ))}
                       </div>
                     )}
 
                     {/* Enviar Comentario Form */}
-                    <form onSubmit={handleAddComentario} style={{ display: 'flex', gap: '6px', borderTop: '1px solid #f1f5f9', paddingTop: '10px' }}>
+                    <form onSubmit={handleAddComentario} style={{ display: 'flex', gap: '6px', borderTop: '1px solid var(--border)', paddingTop: '10px' }}>
                       <input 
                         type="text"
                         placeholder="Escribe un comentario..."
@@ -699,16 +706,16 @@ export default function TareasPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   
                   {/* Panel de Atributos */}
-                  <div style={{ backgroundColor: '#f8fafc', padding: '14px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border)', padding: '14px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <div>
-                      <span style={{ fontSize: '12px', color: '#64748b', display: 'block', fontWeight: 600 }}>Estado</span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', fontWeight: 600 }}>Estado</span>
                       <span className={ESTADOS[tareaDetalle.estado] ?? 'ws-badge'} style={{ marginTop: '4px', display: 'inline-block' }}>
                         {LABEL_ESTADO[tareaDetalle.estado] ?? tareaDetalle.estado}
                       </span>
                     </div>
 
                     <div>
-                      <span style={{ fontSize: '12px', color: '#64748b', display: 'block', fontWeight: 600 }}>Prioridad</span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', fontWeight: 600 }}>Prioridad</span>
                       <span 
                         className={`ws-prioridad ws-prioridad-${tareaDetalle.prioridad.toLowerCase()}`}
                         style={{ marginTop: '4px', display: 'inline-block' }}
@@ -718,8 +725,8 @@ export default function TareasPage() {
                     </div>
 
                     <div>
-                      <span style={{ fontSize: '12px', color: '#64748b', display: 'block', fontWeight: 600 }}>Responsable Asignado</span>
-                      <span style={{ fontSize: '13.5px', color: '#1e293b', fontWeight: 700, marginTop: '2px', display: 'block' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', fontWeight: 600 }}>Responsable Asignado</span>
+                      <span style={{ fontSize: '13.5px', color: 'var(--text-primary)', fontWeight: 700, marginTop: '2px', display: 'block' }}>
                         {(() => {
                           const m = miembros.find(x => x.usuarioId === tareaDetalle.responsableId);
                           return m ? `${m.nombreUsuario} (${m.correoUsuario})` : (tareaDetalle.responsableId ? `ID Colaborador: ${tareaDetalle.responsableId}` : 'Sin responsable');
@@ -728,8 +735,8 @@ export default function TareasPage() {
                     </div>
 
                     <div>
-                      <span style={{ fontSize: '12px', color: '#64748b', display: 'block', fontWeight: 600 }}>Fecha Límite</span>
-                      <span style={{ fontSize: '13px', color: '#1e293b', marginTop: '2px', display: 'block' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', fontWeight: 600 }}>Fecha Límite</span>
+                      <span style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px', display: 'block' }}>
                         {tareaDetalle.fechaLimite || 'Sin fecha límite'}
                       </span>
                     </div>
@@ -737,7 +744,7 @@ export default function TareasPage() {
 
                   {/* Dependencias de la Tarea (RF-03 & RF-11) */}
                   <div>
-                    <h4 style={{ fontSize: '13.5px', fontWeight: 700, color: '#334155', margin: '0 0 6px 0' }}>
+                    <h4 style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
                       🔗 Depende de (Prerrequisitos)
                     </h4>
                     {tareaDetalle.dependencias && tareaDetalle.dependencias.length > 0 ? (
@@ -750,10 +757,10 @@ export default function TareasPage() {
                               key={depId} 
                               style={{
                                 fontSize: '12px', 
-                                backgroundColor: estaCompletada ? '#e2e8f0' : '#fee2e2', 
-                                color: estaCompletada ? '#334155' : '#ef4444',
+                                backgroundColor: estaCompletada ? 'rgba(255, 255, 255, 0.04)' : 'rgba(239, 68, 68, 0.12)', 
+                                color: estaCompletada ? 'var(--text-secondary)' : '#f87171',
                                 padding: '4px 10px', borderRadius: '6px', fontWeight: 550,
-                                border: estaCompletada ? 'none' : '1px solid #fca5a5'
+                                border: estaCompletada ? '1px solid var(--border)' : '1px solid rgba(239, 68, 68, 0.2)'
                               }}
                               title={estaCompletada ? 'Dependencia resuelta' : 'Dependencia pendiente (BLOQUEANTE)'}
                             >
@@ -763,32 +770,32 @@ export default function TareasPage() {
                         })}
                       </div>
                     ) : (
-                      <span style={{ fontSize: '13px', color: '#64748b', fontStyle: 'italic' }}>Esta tarea no depende de ninguna otra.</span>
+                      <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontStyle: 'italic' }}>Esta tarea no depende de ninguna otra.</span>
                     )}
                   </div>
 
                   {/* Historial de Auditoría / Cambios de Estado (RF-05) */}
-                  <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '12px' }}>
-                    <h4 style={{ fontSize: '13.5px', fontWeight: 700, color: '#0f172a', margin: '0 0 10px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
+                    <h4 style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 10px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span>⏳</span> Historial de Estados
                     </h4>
                     
                     {cargandoHistorial ? (
-                      <div style={{ fontSize: '12px', color: '#64748b' }}>Cargando bitácora...</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Cargando bitácora...</div>
                     ) : historial.length === 0 ? (
-                      <div style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic' }}>Sin cambios registrados.</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic' }}>Sin cambios registrados.</div>
                     ) : (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingLeft: '8px', borderLeft: '2px solid #e2e8f0', maxHeight: '200px', overflowY: 'auto' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingLeft: '8px', borderLeft: '2px solid var(--border)', maxHeight: '200px', overflowY: 'auto' }}>
                         {historial.map((h: any) => (
-                          <div key={h.id} style={{ position: 'relative', fontSize: '12.5px', color: '#475569' }}>
+                          <div key={h.id} style={{ position: 'relative', fontSize: '12.5px', color: 'var(--text-secondary)' }}>
                             <div style={{
                               position: 'absolute', left: '-13px', top: '4px', width: '8px', height: '8px',
-                              borderRadius: '50%', backgroundColor: '#cbd5e1', border: '2px solid #ffffff'
+                              borderRadius: '50%', backgroundColor: '#cbd5e1', border: '2px solid #07080c'
                             }} />
                             
                             <div>
-                              <span style={{ fontWeight: 600, color: '#1e293b' }}>{h.usuarioNombre}</span> cambió de{' '}
-                              <span style={{ fontSize: '10px', textTransform: 'uppercase', padding: '1px 5px', backgroundColor: '#f1f5f9', borderRadius: '4px' }}>
+                              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{h.usuarioNombre}</span> cambió de{' '}
+                              <span style={{ fontSize: '10px', textTransform: 'uppercase', padding: '1px 5px', backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px', color: 'var(--text-secondary)' }}>
                                 {LABEL_ESTADO[h.estadoAnterior] ?? h.estadoAnterior}
                               </span>{' '}
                               a{' '}
@@ -797,11 +804,11 @@ export default function TareasPage() {
                               </span>
                             </div>
                             
-                            <div style={{ fontSize: '11.5px', color: '#64748b', marginTop: '2px', fontStyle: 'italic' }}>
+                            <div style={{ fontSize: '11.5px', color: 'var(--text-muted)', marginTop: '2px', fontStyle: 'italic' }}>
                               &ldquo;{h.motivo}&rdquo;
                             </div>
 
-                            <div style={{ fontSize: '10.5px', color: '#94a3b8', marginTop: '1px' }}>
+                            <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', marginTop: '1px' }}>
                               {h.fecha ? new Date(h.fecha).toLocaleString() : '—'}
                             </div>
                           </div>
@@ -814,7 +821,7 @@ export default function TareasPage() {
 
               </div>
 
-              <div className="ws-modal-footer" style={{ borderTop: '1px solid #f1f5f9', marginTop: '20px', paddingTop: '12px' }}>
+              <div className="ws-modal-footer" style={{ borderTop: '1px solid var(--border)', marginTop: '20px', paddingTop: '12px' }}>
                 <button className="ws-btn-secondary" onClick={() => setTareaDetalle(null)}>
                   Cerrar
                 </button>

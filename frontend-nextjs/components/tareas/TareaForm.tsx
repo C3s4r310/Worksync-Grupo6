@@ -235,7 +235,7 @@ export default function TareaForm({ proyectoId, tareaEditar, onGuardar, onCancel
                 border: '1px solid var(--border)',
                 borderRadius: '8px',
                 padding: '8px',
-                backgroundColor: '#f8fafc',
+                backgroundColor: 'rgba(255, 255, 255, 0.03)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '6px'
@@ -243,7 +243,7 @@ export default function TareaForm({ proyectoId, tareaEditar, onGuardar, onCancel
                 {tareasProyecto
                   .filter(t => !tareaEditar || t.id !== tareaEditar.id)
                   .map(t => (
-                    <label key={t.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155', cursor: 'pointer' }}>
+                    <label key={t.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)', cursor: 'pointer' }}>
                       <input
                         type="checkbox"
                         checked={dependencias.includes(t.id)}

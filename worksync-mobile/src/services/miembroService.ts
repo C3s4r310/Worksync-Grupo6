@@ -1,4 +1,15 @@
-import { db } from '../utils/localDb';
+import { loadAuth } from '../utils/storage';
+import { API_BASE_URL } from './apiConfig';
+
+const getBaseUrl = (proyectoId: number) => `${API_BASE_URL}/proyectos/${proyectoId}/miembros`;
+
+const getAuthHeader = (): HeadersInit => {
+  const auth = loadAuth();
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${auth?.token ?? ''}`,
+  };
+};
 
 export interface MiembroDTO {
   id: number;
@@ -13,68 +24,43 @@ export interface MiembroDTO {
 
 // RF-09: Listar miembros activos de un proyecto
 export const listarMiembros = async (proyectoId: number): Promise<MiembroDTO[]> => {
-  await new Promise(resolve => setTimeout(resolve, 150));
-  
-  const list = db.miembros.getByProyecto(proyectoId);
-  const result: MiembroDTO[] = [];
+  const response = await fetch(getBaseUrl(proyectoId), {
+    headers: getAuthHeader(),
+  });
 
-  for (const m of list) {
-    const user = db.usuarios.getById(m.usuarioId);
-    if (user) {
-      result.push({
-        id: m.id,
-        proyectoId: m.proyectoId,
-        usuarioId: m.usuarioId,
-        nombreUsuario: user.nombre,
-        correoUsuario: user.correo,
-        rol: m.rol,
-        fechaIngreso: m.fechaIngreso,
-        activo: m.activo
-      });
-    }
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al listar los miembros del proyecto');
   }
 
-  return result;
+  return response.json();
 };
 
 // RF-09: Agregar miembro a un proyecto
 export const agregarMiembro = async (proyectoId: number, usuarioId: number, rol: string): Promise<MiembroDTO> => {
-  await new Promise(resolve => setTimeout(resolve, 200));
+  const response = await fetch(getBaseUrl(proyectoId), {
+    method: 'POST',
+    headers: getAuthHeader(),
+    body: JSON.stringify({ usuarioId, rol }),
+  });
 
-  // Verificar si ya existe pero inactivo
-  const existing = db.miembros.getAll().find(m => m.proyectoId === proyectoId && m.usuarioId === usuarioId);
-  let rawMemb;
-  if (existing) {
-    // Activar de nuevo
-    const list = db.miembros.getAll();
-    const idx = list.findIndex(m => m.id === existing.id);
-    list[idx].activo = true;
-    list[idx].rol = rol;
-    localStorage.setItem('ws_db_miembros', JSON.stringify(list));
-    rawMemb = list[idx];
-  } else {
-    rawMemb = db.miembros.create({
-      proyectoId,
-      usuarioId,
-      rol
-    });
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al agregar el miembro al proyecto');
   }
 
-  const user = db.usuarios.getById(usuarioId);
-  return {
-    id: rawMemb.id,
-    proyectoId: rawMemb.proyectoId,
-    usuarioId: rawMemb.usuarioId,
-    nombreUsuario: user?.nombre || 'Usuario',
-    correoUsuario: user?.correo || '',
-    rol: rawMemb.rol,
-    fechaIngreso: rawMemb.fechaIngreso,
-    activo: rawMemb.activo
-  };
+  return response.json();
 };
 
 // RF-09: Retirar miembro de un proyecto
 export const retirarMiembro = async (proyectoId: number, usuarioId: number): Promise<void> => {
-  await new Promise(resolve => setTimeout(resolve, 150));
-  db.miembros.remove(proyectoId, usuarioId);
+  const response = await fetch(`${getBaseUrl(proyectoId)}/${usuarioId}`, {
+    method: 'DELETE',
+    headers: getAuthHeader(),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al retirar el miembro del proyecto');
+  }
 };

@@ -15,6 +15,7 @@ import com.worksync.worksync.DTO.proyectoDTO;
 import java.time.LocalDate;
 import java.util.List;
 
+// RF-02 Gestión de Proyectos: CRUD de proyectos con fechas y responsables.
 @RestController
 @RequestMapping("/api/proyectos")
 @CrossOrigin(origins = "*")

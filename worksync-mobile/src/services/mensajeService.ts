@@ -1,75 +1,41 @@
 import { loadAuth } from '../utils/storage';
-import { db } from '../utils/localDb';
-import type { Mensaje, ProyectoMiembrosChat, MiembroChat } from '../types/mensaje';
+import { API_BASE_URL } from './apiConfig';
+import { Mensaje, ProyectoMiembrosChat } from '../types/mensaje';
+
+const BASE_URL = `${API_BASE_URL}/mensajes`;
+
+const getAuthHeader = (): HeadersInit => {
+  const auth = loadAuth();
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${auth?.token ?? ''}`,
+  };
+};
 
 export const obtenerContactos = async (): Promise<ProyectoMiembrosChat[]> => {
-  await new Promise(resolve => setTimeout(resolve, 150));
-  
-  const auth = loadAuth();
-  const currentUserId = auth?.user?.id;
-  if (!currentUserId) return [];
+  const response = await fetch(`${BASE_URL}/contactos`, {
+    headers: getAuthHeader(),
+  });
 
-  // Obtener proyectos donde el usuario actual es miembro activo
-  const userMemberships = db.miembros.getAll().filter(m => m.usuarioId === currentUserId && m.activo);
-  const userProjIds = userMemberships.map(m => m.proyectoId);
-
-  const result: ProyectoMiembrosChat[] = [];
-
-  for (const projId of userProjIds) {
-    const proj = db.proyectos.getById(projId);
-    if (!proj) continue;
-
-    // Obtener todos los miembros activos de este proyecto
-    const projMembers = db.miembros.getByProyecto(projId);
-    const miembrosChatList: MiembroChat[] = [];
-
-    for (const m of projMembers) {
-      // No agregarse a uno mismo como contacto de chat
-      if (m.usuarioId === currentUserId) continue;
-
-      const user = db.usuarios.getById(m.usuarioId);
-      if (user) {
-        miembrosChatList.push({
-          id: user.id,
-          nombre: user.nombre,
-          correo: user.correo,
-          rol: user.rol,
-          activo: m.activo,
-          ultimaConexion: user.ultimaConexion
-        });
-      }
-    }
-
-    result.push({
-      id: proj.id,
-      nombre: proj.nombre,
-      miembros: miembrosChatList
-    });
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al obtener la lista de contactos');
   }
 
-  return result;
+  return response.json();
 };
 
 export const obtenerHistorial = async (receptorId: number): Promise<Mensaje[]> => {
-  await new Promise(resolve => setTimeout(resolve, 150));
-  
-  const auth = loadAuth();
-  const currentUserId = auth?.user?.id;
-  if (!currentUserId) return [];
+  const response = await fetch(`${BASE_URL}/historial/${receptorId}`, {
+    headers: getAuthHeader(),
+  });
 
-  // Marcar como leídos
-  db.mensajes.markAsRead(receptorId, currentUserId);
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al obtener el historial de chat');
+  }
 
-  const rawList = db.mensajes.getByConversation(currentUserId, receptorId);
-  return rawList.map(m => ({
-    id: m.id,
-    emisorId: m.remitenteId,
-    receptorId: m.destinatarioId,
-    proyectoId: m.proyectoId,
-    contenido: m.contenido,
-    fechaEnvio: m.fechaEnvio,
-    leido: m.leido
-  }));
+  return response.json();
 };
 
 export const enviarMensaje = async (
@@ -77,28 +43,16 @@ export const enviarMensaje = async (
   contenido: string,
   proyectoId?: number
 ): Promise<Mensaje> => {
-  await new Promise(resolve => setTimeout(resolve, 150));
-
-  const auth = loadAuth();
-  const currentUserId = auth?.user?.id;
-  if (!currentUserId) {
-    throw new Error('Sesión inválida');
-  }
-
-  const newMsg = db.mensajes.create({
-    remitenteId: currentUserId,
-    destinatarioId: receptorId,
-    contenido,
-    proyectoId: proyectoId || 0
+  const response = await fetch(BASE_URL, {
+    method: 'POST',
+    headers: getAuthHeader(),
+    body: JSON.stringify({ receptorId, contenido, proyectoId }),
   });
 
-  return {
-    id: newMsg.id,
-    emisorId: newMsg.remitenteId,
-    receptorId: newMsg.destinatarioId,
-    proyectoId: newMsg.proyectoId,
-    contenido: newMsg.contenido,
-    fechaEnvio: newMsg.fechaEnvio,
-    leido: newMsg.leido
-  };
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al enviar el mensaje');
+  }
+
+  return response.json();
 };

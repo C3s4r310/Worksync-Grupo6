@@ -108,7 +108,7 @@ function DoughnutChart({ data }: { data: { estado: string; cantidad: number }[] 
               key={slice.estado}
               d={pathData}
               fill={color}
-              stroke="#ffffff"
+              stroke="#0d111a"
               strokeWidth={2}
               opacity={hoveredIndex === null || isHovered ? 1 : 0.75}
               transform={isHovered ? `scale(1.03) translate(${-centerX * 0.03}, ${-centerY * 0.03})` : ''}
@@ -132,23 +132,23 @@ function DoughnutChart({ data }: { data: { estado: string; cantidad: number }[] 
       }}>
         {hoveredIndex !== null ? (
           <>
-            <span style={{ fontSize: 11, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <span style={{ fontSize: 11, color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {LABEL_ESTADO[activeSlices[hoveredIndex].estado.toUpperCase()] || activeSlices[hoveredIndex].estado}
             </span>
-            <div style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', lineHeight: 1.1 }}>
+            <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.1 }}>
               {activeSlices[hoveredIndex].cantidad}
             </div>
-            <span style={{ fontSize: 11, color: '#94a3b8', display: 'block' }}>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)', display: 'block' }}>
               {Math.round((activeSlices[hoveredIndex].cantidad / total) * 100)}%
             </span>
           </>
         ) : (
           <>
-            <span style={{ fontSize: 11, color: '#64748b', fontWeight: 500, display: 'block' }}>TOTAL</span>
-            <div style={{ fontSize: 28, fontWeight: 700, color: '#0f172a', lineHeight: 1.1 }}>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500, display: 'block' }}>TOTAL</span>
+            <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.1 }}>
               {total}
             </div>
-            <span style={{ fontSize: 11, color: '#94a3b8', display: 'block' }}>Tareas</span>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)', display: 'block' }}>Tareas</span>
           </>
         )}
       </div>
@@ -171,23 +171,23 @@ function ProjectProgressChart({ data }: { data: { proyectoNombre: string; porcen
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       {data.map((proj, idx) => (
         <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5, fontWeight: 500, color: '#334155' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5, fontWeight: 500, color: 'var(--text-secondary)' }}>
             <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '80%' }}>
               {proj.proyectoNombre}
             </span>
-            <span style={{ fontWeight: 'bold', color: '#1e293b' }}>{proj.porcentajeCompletitud}%</span>
+            <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>{proj.porcentajeCompletitud}%</span>
           </div>
           <div style={{
             width: '100%',
             height: 12,
-            backgroundColor: '#e2e8f0',
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
             borderRadius: 6,
             overflow: 'hidden'
           }}>
             <div style={{
               width: `${proj.porcentajeCompletitud}%`,
               height: '100%',
-              backgroundImage: 'linear-gradient(90deg, #0284c7 0%, #0369a1 100%)', // Sky 600 a 700
+              background: 'var(--accent-gradient)',
               borderRadius: 6,
               transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)',
             }} />
@@ -263,7 +263,7 @@ function CollaboratorPerformanceChart({ data }: { data: { usuarioNombre: string;
                   y1={tick.y}
                   x2={width - paddingRight}
                   y2={tick.y}
-                  stroke="#e2e8f0"
+                  stroke="rgba(255, 255, 255, 0.08)"
                   strokeWidth={1}
                   strokeDasharray="4 4"
                 />
@@ -272,7 +272,7 @@ function CollaboratorPerformanceChart({ data }: { data: { usuarioNombre: string;
                   y={tick.y + 4}
                   textAnchor="end"
                   fontSize={11}
-                  fill="#64748b"
+                  fill="var(--text-secondary)"
                   fontFamily="Outfit"
                 >
                   {tick.label}
@@ -302,7 +302,7 @@ function CollaboratorPerformanceChart({ data }: { data: { usuarioNombre: string;
                     y={height - paddingBottom + 20}
                     textAnchor="middle"
                     fontSize={11.5}
-                    fill="#475569"
+                    fill="var(--text-secondary)"
                     fontFamily="Outfit"
                     fontWeight={500}
                   >
@@ -315,7 +315,7 @@ function CollaboratorPerformanceChart({ data }: { data: { usuarioNombre: string;
                     cy={yT}
                     r={hoveredPoint?.collabIndex === i && hoveredPoint?.type === 'tiempo' ? 6 : 4}
                     fill="#10b981"
-                    stroke="#ffffff"
+                    stroke="#0d111a"
                     strokeWidth={2}
                     onMouseEnter={() => setHoveredPoint({ collabIndex: i, type: 'tiempo' })}
                     onMouseLeave={() => setHoveredPoint(null)}
@@ -328,7 +328,7 @@ function CollaboratorPerformanceChart({ data }: { data: { usuarioNombre: string;
                     cy={yR}
                     r={hoveredPoint?.collabIndex === i && hoveredPoint?.type === 'retraso' ? 6 : 4}
                     fill="#ef4444"
-                    stroke="#ffffff"
+                    stroke="#0d111a"
                     strokeWidth={2}
                     onMouseEnter={() => setHoveredPoint({ collabIndex: i, type: 'retraso' })}
                     onMouseLeave={() => setHoveredPoint(null)}
@@ -343,11 +343,11 @@ function CollaboratorPerformanceChart({ data }: { data: { usuarioNombre: string;
 
       {/* Leyenda */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: '#475569' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>
           <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#10b981', display: 'inline-block' }} />
           A tiempo
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: '#475569' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>
           <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ef4444', display: 'inline-block' }} />
           Retrasadas
         </div>
@@ -385,6 +385,8 @@ function CollaboratorPerformanceChart({ data }: { data: { usuarioNombre: string;
 }
 
 // ── PÁGINA PRINCIPAL ──
+// RF-20 Carga de Trabajo: Análisis del rendimiento por colaborador (a tiempo vs retrasadas).
+// RF-21 Reportes & RF-22 Exportación: Gráficas de completitud, visualización y exportación de reportes ejecutivos en formato CSV y vista de impresión PDF.
 export default function ReportesPage() {
   const router = useRouter();
   const [data, setData] = useState<ReporteDashboardData | null>(null);
@@ -472,13 +474,15 @@ export default function ReportesPage() {
           .rep-title {
             font-size: 26px;
             font-weight: 700;
-            color: var(--primary-color);
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 4px;
             letter-spacing: -0.5px;
           }
           .rep-subtitle {
             font-size: 14px;
-            color: var(--text-light);
+            color: var(--text-secondary);
           }
 
           /* KPIs resumen */
@@ -494,24 +498,28 @@ export default function ReportesPage() {
             }
           }
           .rep-kpi-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
+            background: var(--bg-white);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 20px 24px;
             display: flex;
             align-items: center;
             gap: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
           }
           .rep-kpi-icon {
             width: 44px;
             height: 44px;
-            border-radius: var(--radius-md);
-            background-color: #f1f5f9;
+            border-radius: var(--radius-sm);
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
             font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--accent-secondary);
           }
           .rep-kpi-data {
             display: flex;
@@ -520,12 +528,12 @@ export default function ReportesPage() {
           .rep-kpi-val {
             font-size: 24px;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--text-primary);
             line-height: 1.2;
           }
           .rep-kpi-label {
             font-size: 12.5px;
-            color: var(--text-light);
+            color: var(--text-secondary);
             font-weight: 500;
           }
 
@@ -546,23 +554,25 @@ export default function ReportesPage() {
           }
 
           .rep-chart-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
+            background: var(--bg-white);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-md);
             display: flex;
             flex-direction: column;
           }
           .rep-chart-title {
             font-size: 16px;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--text-primary);
             margin-bottom: 6px;
           }
           .rep-chart-desc {
             font-size: 12.5px;
-            color: var(--text-light);
+            color: var(--text-muted);
             margin-bottom: 24px;
           }
           
@@ -570,7 +580,7 @@ export default function ReportesPage() {
           .rep-empty-state {
             text-align: center;
             padding: 48px 16px;
-            color: var(--text-light);
+            color: var(--text-muted);
             font-size: 13.5px;
           }
           .rep-loader-wrap {
@@ -580,8 +590,8 @@ export default function ReportesPage() {
             min-height: 400px;
           }
           .rep-loader {
-            border: 3px solid #e2e8f0;
-            border-top: 3px solid var(--accent-color);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--accent-secondary);
             border-radius: 50%;
             width: 36px;
             height: 36px;
@@ -634,14 +644,16 @@ export default function ReportesPage() {
             justifyContent: 'flex-end',
             gap: 12,
             marginBottom: 24,
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border-color)',
-            borderRadius: 'var(--radius-lg)',
+            background: 'var(--bg-white)',
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius)',
             padding: '12px 24px',
             alignItems: 'center',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+            boxShadow: 'var(--shadow-sm)'
           }}>
-            <span style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text-muted)', marginRight: 'auto' }}>
+            <span style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text-secondary)', marginRight: 'auto' }}>
               📄 Exportar Resumen Ejecutivo:
             </span>
             <button 
@@ -700,21 +712,21 @@ export default function ReportesPage() {
             {/* ROW DE METRICAS CLAVE */}
             <div className="rep-kpi-row">
               <div className="rep-kpi-card">
-                <div className="rep-kpi-icon" style={{ backgroundColor: '#eef2ff', color: '#4f46e5' }}>📊</div>
+                <div className="rep-kpi-icon" style={{ backgroundColor: 'rgba(99, 102, 241, 0.12)', color: '#818cf8', border: '1px solid rgba(99, 102, 241, 0.2)' }}>📊</div>
                 <div className="rep-kpi-data">
                   <span className="rep-kpi-val">{totalTareas}</span>
                   <span className="rep-kpi-label">Tareas Registradas</span>
                 </div>
               </div>
               <div className="rep-kpi-card">
-                <div className="rep-kpi-icon" style={{ backgroundColor: '#ecfdf5', color: '#059669' }}>📈</div>
+                <div className="rep-kpi-icon" style={{ backgroundColor: 'rgba(52, 211, 153, 0.12)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.2)' }}>📈</div>
                 <div className="rep-kpi-data">
                   <span className="rep-kpi-val">{tasaCompletitud}%</span>
                   <span className="rep-kpi-label">Tasa de Completitud</span>
                 </div>
               </div>
               <div className="rep-kpi-card">
-                <div className="rep-kpi-icon" style={{ backgroundColor: '#fef2f2', color: '#dc2626' }}>⚡</div>
+                <div className="rep-kpi-icon" style={{ backgroundColor: 'rgba(248, 113, 113, 0.12)', color: '#f87171', border: '1px solid rgba(248, 113, 113, 0.2)' }}>⚡</div>
                 <div className="rep-kpi-data">
                   <span className="rep-kpi-val">{eficienciaGlobal}%</span>
                   <span className="rep-kpi-label">Eficiencia en Plazos</span>

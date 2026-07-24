@@ -1,77 +1,54 @@
 import type { Notificacion } from '../types/notificacion';
 import { loadAuth } from '../utils/storage';
+import { API_BASE_URL } from './apiConfig';
 
-const getLocalNotifications = (): Notificacion[] => {
-  const data = localStorage.getItem('ws_db_notificaciones');
-  if (data) return JSON.parse(data);
+const BASE_URL = `${API_BASE_URL}/notificaciones`;
 
-  // Inicializar notificaciones semilla
+const getAuthHeader = (): HeadersInit => {
   const auth = loadAuth();
-  const userId = auth?.user?.id || 1;
-  const seed: Notificacion[] = [
-    {
-      id: 1,
-      usuarioId: userId,
-      mensaje: 'Has sido asignado al Proyecto Worksync Móvil.',
-      leida: false,
-      fecha: new Date(Date.now() - 3600000 * 2).toISOString()
-    },
-    {
-      id: 2,
-      usuarioId: userId,
-      mensaje: 'Nueva tarea crítica pendiente: "Integrar almacenamiento local offline".',
-      leida: false,
-      fecha: new Date(Date.now() - 3600000).toISOString()
-    }
-  ];
-  localStorage.setItem('ws_db_notificaciones', JSON.stringify(seed));
-  return seed;
-};
-
-const saveLocalNotifications = (list: Notificacion[]) => {
-  localStorage.setItem('ws_db_notificaciones', JSON.stringify(list));
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${auth?.token ?? ''}`,
+  };
 };
 
 export const listarNotificaciones = async (): Promise<Notificacion[]> => {
-  await new Promise(resolve => setTimeout(resolve, 150));
-  const auth = loadAuth();
-  const currentUserId = auth?.user?.id;
-  if (!currentUserId) return [];
+  const response = await fetch(BASE_URL, {
+    headers: getAuthHeader(),
+  });
 
-  return getLocalNotifications().filter(n => n.usuarioId === currentUserId);
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al listar las notificaciones');
+  }
+
+  return response.json();
 };
 
 export const marcarComoLeida = async (id: number): Promise<Notificacion> => {
-  await new Promise(resolve => setTimeout(resolve, 150));
-  const list = getLocalNotifications();
-  const idx = list.findIndex(n => n.id === id);
-  if (idx === -1) {
-    throw new Error('Notificación no encontrada');
+  const response = await fetch(`${BASE_URL}/${id}/leer`, {
+    method: 'PUT',
+    headers: getAuthHeader(),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al marcar la notificación como leída');
   }
 
-  list[idx].leida = true;
-  saveLocalNotifications(list);
-  return list[idx];
+  return response.json();
 };
 
 export const dispararAlertasManualmente = async (): Promise<string> => {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  const auth = loadAuth();
-  const userId = auth?.user?.id || 1;
+  const response = await fetch(`${BASE_URL}/ejecutar-alertas`, {
+    method: 'POST',
+    headers: getAuthHeader(),
+  });
 
-  const list = getLocalNotifications();
-  const nextId = list.length > 0 ? Math.max(...list.map(n => n.id)) + 1 : 1;
-  
-  const alertNotif: Notificacion = {
-    id: nextId,
-    usuarioId: userId,
-    mensaje: `Alerta disparada manual: Tienes tareas pendientes por completar.`,
-    leida: false,
-    fecha: new Date().toISOString()
-  };
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al disparar alertas manualmente');
+  }
 
-  list.push(alertNotif);
-  saveLocalNotifications(list);
-
-  return 'Alertas procesadas de manera local.';
+  return response.text();
 };

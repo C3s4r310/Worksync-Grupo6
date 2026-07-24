@@ -9,6 +9,7 @@ import com.worksync.worksync.Servicio.authSERVICIO;
 import com.worksync.worksync.DTO.LoginRequestDTO;
 import com.worksync.worksync.DTO.RegisterRequestDTO;
 
+// RF-01 Autenticación y Seguridad: Registro, login y tokens JWT.
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")

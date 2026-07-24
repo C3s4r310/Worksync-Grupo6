@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// RF-23 Notificaciones & RF-12 Alertas: Consulta y marcación como leídas de las alertas de vencimientos de tareas.
 @RestController
 @RequestMapping("/api/notificaciones")
 @CrossOrigin(origins = "*")

@@ -29,6 +29,9 @@ const LABEL_ESTADO: Record<string, string> = {
   CANCELADA:   'Cancelado',
 };
 
+// RF-19 Dashboard Ejecutivo: KPI Cards (Proyectos Activos, Tareas Pendientes, Tareas Próximas a Vencer).
+// RF-17 Historial: Feed de Actividades Recientes de cambios de estado.
+// RF-07 Progreso: Indicación visual del estado del proyecto en la pantalla principal.
 export default function Home() {
   const { user } = useAuth();
   const router = useRouter();
@@ -114,13 +117,15 @@ export default function Home() {
           .db-greeting {
             font-size: 26px;
             font-weight: 700;
-            color: var(--primary-color);
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 4px;
             letter-spacing: -0.5px;
           }
           .db-subtitle {
             font-size: 14px;
-            color: var(--text-light);
+            color: var(--text-secondary);
           }
 
           /* KPI Grid */
@@ -136,24 +141,26 @@ export default function Home() {
             }
           }
           .db-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
+            background: var(--bg-white);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-sm);
           }
           .db-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-            border-color: #cbd5e1;
+            box-shadow: 0 12px 32px rgba(168, 85, 247, 0.15);
+            border-color: rgba(168, 85, 247, 0.25);
           }
           .db-card-alert {
-            border-left: 4px solid var(--error-color);
+            border-left: 4px solid #f87171 !important;
           }
           .db-card-info {
             display: flex;
@@ -164,13 +171,13 @@ export default function Home() {
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--text-light);
+            color: var(--text-secondary);
             margin-bottom: 6px;
           }
           .db-card-value {
             font-size: 32px;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--text-primary);
             line-height: 1;
             margin-bottom: 4px;
           }
@@ -181,25 +188,29 @@ export default function Home() {
           .db-card-icon {
             width: 48px;
             height: 48px;
-            border-radius: var(--radius-md);
-            background-color: #f1f5f9;
-            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+            background-color: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            transition: background-color 0.2s;
+            transition: all 0.25s;
+            border: 1px solid var(--border);
           }
           .db-card:hover .db-card-icon {
-            background-color: #e2e8f0;
-            color: var(--accent-color);
+            background-color: rgba(255, 255, 255, 0.08);
+            color: var(--accent-secondary);
+            border-color: rgba(255, 255, 255, 0.2);
           }
           .db-card-alert .db-card-icon {
-            background-color: #fef2f2;
-            color: var(--error-color);
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.2);
           }
           .db-card-alert:hover .db-card-icon {
-            background-color: #fee2e2;
+            background-color: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
           }
 
           /* Two Column Section Layout */
@@ -216,36 +227,39 @@ export default function Home() {
           }
 
           .db-section {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
+            background: var(--bg-white);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 24px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-md);
           }
           .db-section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border);
             padding-bottom: 12px;
           }
           .db-section-title {
             font-size: 17px;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--text-primary);
           }
           .db-section-link {
             font-size: 12px;
             font-weight: 600;
-            color: var(--accent-color);
+            color: var(--accent-secondary);
             cursor: pointer;
             background: none;
             border: none;
             padding: 0;
+            transition: color 0.2s;
           }
           .db-section-link:hover {
-            color: var(--accent-hover);
+            color: var(--accent);
             text-decoration: underline;
           }
 
@@ -256,19 +270,19 @@ export default function Home() {
           }
           .db-table th {
             text-align: left;
-            padding: 10px 12px;
+            padding: 12px 14px;
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
-            color: var(--text-light);
-            border-bottom: 1px solid var(--border-color);
-            background-color: #fafbfc;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            background-color: rgba(255, 255, 255, 0.02);
           }
           .db-table td {
             padding: 14px 12px;
             font-size: 13.5px;
-            color: var(--text-muted);
-            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
           }
           .db-table tr:last-child td {
             border-bottom: none;
@@ -278,16 +292,16 @@ export default function Home() {
             cursor: pointer;
           }
           .db-table-row:hover {
-            background-color: #f8fafc;
+            background-color: rgba(255, 255, 255, 0.03);
           }
           .db-task-title {
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--text-primary);
             margin-bottom: 3px;
           }
           .db-task-proj {
             font-size: 11px;
-            color: var(--text-light);
+            color: var(--text-muted);
           }
 
           /* Recent Activity Timeline */
@@ -303,7 +317,7 @@ export default function Home() {
             left: 5px;
             bottom: 6px;
             width: 2px;
-            background-color: var(--border-color);
+            background-color: var(--border);
           }
           .db-timeline-item {
             position: relative;
@@ -320,16 +334,15 @@ export default function Home() {
             height: 12px;
             border-radius: 50%;
             background-color: #cbd5e1;
-            border: 2px solid #ffffff;
-            box-shadow: 0 0 0 1px rgba(9, 30, 66, 0.08);
+            border: 2px solid #07080c;
           }
-          .db-dot-completada { background-color: #22c55e; } /* Green */
-          .db-dot-progreso   { background-color: #f97316; } /* Orange */
-          .db-dot-revision   { background-color: #3b82f6; } /* Blue */
-          .db-dot-bloqueada  { background-color: #ef4444; } /* Red */
-          .db-dot-observada  { background-color: #a855f7; } /* Purple */
-          .db-dot-cancelada  { background-color: #64748b; } /* Slate */
-          .db-dot-pendiente  { background-color: #94a3b8; } /* Slate 400 */
+          .db-dot-completada { background-color: #34d399; }
+          .db-dot-progreso   { background-color: #60a5fa; }
+          .db-dot-revision   { background-color: #fbbf24; }
+          .db-dot-bloqueada  { background-color: #f87171; }
+          .db-dot-observada  { background-color: #c084fc; }
+          .db-dot-cancelada  { background-color: #94a3b8; }
+          .db-dot-pendiente  { background-color: #64748b; }
 
           .db-act-header {
             display: flex;
@@ -340,34 +353,34 @@ export default function Home() {
           .db-act-user {
             font-weight: 600;
             font-size: 13.5px;
-            color: var(--primary-color);
+            color: var(--text-primary);
           }
           .db-act-time {
             font-size: 11px;
-            color: var(--text-light);
+            color: var(--text-muted);
           }
           .db-act-body {
             font-size: 13px;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             line-height: 1.45;
           }
           .db-act-task {
             font-weight: 600;
-            color: var(--accent-color);
+            color: var(--accent-secondary);
             cursor: pointer;
           }
           .db-act-task:hover {
             text-decoration: underline;
           }
           .db-act-motivo {
-            font-size: 12px;
-            color: var(--text-light);
+            font-size: 12.5px;
+            color: var(--text-secondary);
             font-style: italic;
             margin-top: 6px;
-            background-color: #f8fafc;
-            padding: 6px 10px;
-            border-radius: 6px;
-            border-left: 2px solid #cbd5e1;
+            background-color: rgba(255, 255, 255, 0.02);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent);
             word-break: break-word;
           }
           .db-transition {
@@ -378,14 +391,14 @@ export default function Home() {
             font-size: 11px;
           }
           .db-arrow {
-            color: var(--text-light);
+            color: var(--text-muted);
           }
 
           /* Empty States */
           .db-empty {
             text-align: center;
             padding: 32px 16px;
-            color: var(--text-light);
+            color: var(--text-muted);
             font-size: 13.5px;
           }
           .db-empty-icon {
@@ -401,8 +414,8 @@ export default function Home() {
             min-height: 300px;
           }
           .db-spinner {
-            border: 3px solid #e2e8f0;
-            border-top: 3px solid var(--accent-color);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--accent-secondary);
             border-radius: 50%;
             width: 32px;
             height: 32px;
@@ -463,7 +476,9 @@ export default function Home() {
                   <span className="db-card-value">{data.proyectosActivos}</span>
                   <span className="db-card-desc">Asignados o en gestión</span>
                 </div>
-                <div className="db-card-icon">💼</div>
+                <div className="db-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                </div>
               </div>
 
               <div className="db-card" onClick={() => router.push('/tareas')}>
@@ -472,7 +487,9 @@ export default function Home() {
                   <span className="db-card-value">{data.misTareasPendientes}</span>
                   <span className="db-card-desc">Asignadas a tu cuenta</span>
                 </div>
-                <div className="db-card-icon">🎯</div>
+                <div className="db-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                </div>
               </div>
 
               <div className={`db-card ${data.vencenPronto > 0 ? 'db-card-alert' : ''}`} onClick={() => router.push('/tareas')}>
@@ -481,7 +498,9 @@ export default function Home() {
                   <span className="db-card-value">{data.vencenPronto}</span>
                   <span className="db-card-desc">Próximos 3 días</span>
                 </div>
-                <div className="db-card-icon">⏳</div>
+                <div className="db-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2h14"/><path d="M5 22h14"/><path d="M19 2v4c0 3.3-2.7 6-6 6H11C7.7 12 5 9.3 5 6V2"/><path d="M19 22v-4c0-3.3-2.7-6-6-6H11c-3.3 0-6 2.7-6 6v4"/></svg>
+                </div>
               </div>
             </div>
 

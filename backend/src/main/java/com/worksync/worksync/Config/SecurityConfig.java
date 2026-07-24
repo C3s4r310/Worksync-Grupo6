@@ -40,6 +40,9 @@ public class SecurityConfig {
                         // RF-08: Permitir a ADMIN y LIDER ver la lista de usuarios del sistema
                         .requestMatchers(HttpMethod.GET, "/api/usuarios").hasAnyRole("ADMIN", "LIDER")
 
+                        // RF-28: Solo ADMIN y LIDER pueden consultar la bitácora de auditoría del sistema
+                        .requestMatchers(HttpMethod.GET, "/api/auditoria").hasAnyRole("ADMIN", "LIDER")
+
                         // RF-01: Permitir a cualquier usuario autenticado cambiar su contraseña
                         .requestMatchers(HttpMethod.PUT, "/api/usuarios/cambiar-contrasena").authenticated()
 

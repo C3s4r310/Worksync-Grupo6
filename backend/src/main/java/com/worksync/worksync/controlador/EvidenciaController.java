@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+// RF-06 Evidencias: Hilo de evidencias y adjuntos de tareas (archivos y URLs).
 @RestController
 @RequestMapping("/api/tareas/{tareaId}/evidencias")
 @CrossOrigin(origins = "*")

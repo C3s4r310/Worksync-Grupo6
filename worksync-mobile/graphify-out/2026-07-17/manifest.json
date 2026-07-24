@@ -1,0 +1,422 @@
+{
+  ".vscode/extensions.json": {
+    "mtime": 1781302547.0,
+    "ast_hash": "5495c55a87705561e031515581d085a9",
+    "semantic_hash": "5495c55a87705561e031515581d085a9"
+  },
+  "android/app/build.gradle": {
+    "mtime": 1783053648.5340722,
+    "ast_hash": "198e60eee81adfcba4b47956b5366488",
+    "semantic_hash": "198e60eee81adfcba4b47956b5366488"
+  },
+  "android/app/capacitor.build.gradle": {
+    "mtime": 1783096034.8623908,
+    "ast_hash": "061e58258e99a09b75ca0958ad2fdff0",
+    "semantic_hash": "061e58258e99a09b75ca0958ad2fdff0"
+  },
+  "android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java": {
+    "mtime": 1781859670.0,
+    "ast_hash": "fbaf7cc870c663eb52dcf218531c439d",
+    "semantic_hash": "fbaf7cc870c663eb52dcf218531c439d"
+  },
+  "android/app/src/main/assets/capacitor.config.json": {
+    "mtime": 1783096034.7763882,
+    "ast_hash": "8f3a4d60731a42b2e6da6207235b2ecc",
+    "semantic_hash": "8f3a4d60731a42b2e6da6207235b2ecc"
+  },
+  "android/app/src/main/assets/capacitor.plugins.json": {
+    "mtime": 1783096034.8223894,
+    "ast_hash": "0e650dd358fb6bee3b9e618d62eafb1e",
+    "semantic_hash": "0e650dd358fb6bee3b9e618d62eafb1e"
+  },
+  "android/app/src/main/assets/public/assets/index-legacy-1fMvSWbO.js": {
+    "mtime": 1783096034.7735012,
+    "ast_hash": "dca5d762189ee93041d839edec219c4b",
+    "semantic_hash": "dca5d762189ee93041d839edec219c4b"
+  },
+  "android/app/src/main/assets/public/assets/index-pp2oTjGe.js": {
+    "mtime": 1783096034.7739327,
+    "ast_hash": "11d71cb4b58f8039a7d1a5ff563bb211",
+    "semantic_hash": "11d71cb4b58f8039a7d1a5ff563bb211"
+  },
+  "android/app/src/main/assets/public/assets/p-C1aScSTo-BZBZQtLm.js": {
+    "mtime": 1783096034.7738564,
+    "ast_hash": "eddee65918fa0b41d631bdbc13a4a035",
+    "semantic_hash": "eddee65918fa0b41d631bdbc13a4a035"
+  },
+  "android/app/src/main/assets/public/assets/p-C1aScSTo-legacy-GN68roBS.js": {
+    "mtime": 1783096034.773385,
+    "ast_hash": "989fed1f7896a7fa207995c8d7e58c0a",
+    "semantic_hash": "989fed1f7896a7fa207995c8d7e58c0a"
+  },
+  "android/app/src/main/assets/public/assets/p-C4t5ymfq-4IDFsmUa.js": {
+    "mtime": 1783096034.773688,
+    "ast_hash": "262434a1db0ef9a045e5e7b48b9de8e7",
+    "semantic_hash": "262434a1db0ef9a045e5e7b48b9de8e7"
+  },
+  "android/app/src/main/assets/public/assets/p-C4t5ymfq-legacy-DYovsyZG.js": {
+    "mtime": 1783096034.773385,
+    "ast_hash": "c26b50aef081152ad13454d90c8da4a4",
+    "semantic_hash": "c26b50aef081152ad13454d90c8da4a4"
+  },
+  "android/app/src/main/assets/public/assets/p-D5Ubpm7D-Bf8hvtIu.js": {
+    "mtime": 1783096034.7738564,
+    "ast_hash": "67741d119b21f1f7369ae5a9209d214c",
+    "semantic_hash": "67741d119b21f1f7369ae5a9209d214c"
+  },
+  "android/app/src/main/assets/public/assets/p-D5Ubpm7D-legacy-pypJMIiA.js": {
+    "mtime": 1783096034.7732313,
+    "ast_hash": "109a56cfa875afbe6f85266835468c43",
+    "semantic_hash": "109a56cfa875afbe6f85266835468c43"
+  },
+  "android/app/src/main/assets/public/assets/p-D6Ynv7Xh-B-3KESUw.js": {
+    "mtime": 1783096034.7737439,
+    "ast_hash": "0a999d3a2ec4cc0ae00328098a2f1461",
+    "semantic_hash": "0a999d3a2ec4cc0ae00328098a2f1461"
+  },
+  "android/app/src/main/assets/public/assets/p-D6Ynv7Xh-legacy-C1PV1co6.js": {
+    "mtime": 1783096034.773385,
+    "ast_hash": "beb0bc2b1902e647a60cd8adbf9c9e8c",
+    "semantic_hash": "beb0bc2b1902e647a60cd8adbf9c9e8c"
+  },
+  "android/app/src/main/assets/public/assets/p-D7bSXQD3-legacy-3ebEe6o2.js": {
+    "mtime": 1783096034.7735012,
+    "ast_hash": "12f6a157089f9560be611debdc0d37f2",
+    "semantic_hash": "12f6a157089f9560be611debdc0d37f2"
+  },
+  "android/app/src/main/assets/public/assets/p-D7bSXQD3-xhOT9YmV.js": {
+    "mtime": 1783096034.773688,
+    "ast_hash": "37dc0ea889d763beb04ab39ea011f858",
+    "semantic_hash": "37dc0ea889d763beb04ab39ea011f858"
+  },
+  "android/app/src/main/assets/public/assets/p-DIE4pXMl-CTptQQ7D.js": {
+    "mtime": 1783096034.7739327,
+    "ast_hash": "67be07b73eeb1b39fda6cee26265fd8a",
+    "semantic_hash": "67be07b73eeb1b39fda6cee26265fd8a"
+  },
+  "android/app/src/main/assets/public/assets/p-DIE4pXMl-legacy-C96SFaYv.js": {
+    "mtime": 1783096034.773651,
+    "ast_hash": "cdc5065818f9d71087d566e9051e17cd",
+    "semantic_hash": "cdc5065818f9d71087d566e9051e17cd"
+  },
+  "android/app/src/main/assets/public/assets/p-Sh0ICmPV-B01KYcJY.js": {
+    "mtime": 1783096034.7737439,
+    "ast_hash": "0039c3ff9984081385c735b4d8c03249",
+    "semantic_hash": "0039c3ff9984081385c735b4d8c03249"
+  },
+  "android/app/src/main/assets/public/assets/p-Sh0ICmPV-legacy-Z8fMn9ej.js": {
+    "mtime": 1783096034.7735012,
+    "ast_hash": "8640235070cd6063c8065a7841e72e6b",
+    "semantic_hash": "8640235070cd6063c8065a7841e72e6b"
+  },
+  "android/app/src/main/assets/public/assets/polyfills-legacy-QSyI3vqe.js": {
+    "mtime": 1783096034.773688,
+    "ast_hash": "5eaa0b68afe076b9b3b4bf950cd0779f",
+    "semantic_hash": "5eaa0b68afe076b9b3b4bf950cd0779f"
+  },
+  "android/app/src/main/assets/public/cordova.js": {
+    "mtime": 1783096034.8593905,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "android/app/src/main/assets/public/cordova_plugins.js": {
+    "mtime": 1783096034.8593905,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "android/app/src/main/assets/public/manifest.json": {
+    "mtime": 1783096034.7709093,
+    "ast_hash": "6f3a0add6e8d4158c2b525c8f6867b57",
+    "semantic_hash": "6f3a0add6e8d4158c2b525c8f6867b57"
+  },
+  "android/app/src/main/java/io/ionic/starter/MainActivity.java": {
+    "mtime": 1783053648.5332417,
+    "ast_hash": "c62553653dcd2b852520b5d4d8b72fdb",
+    "semantic_hash": "c62553653dcd2b852520b5d4d8b72fdb"
+  },
+  "android/app/src/test/java/com/getcapacitor/myapp/ExampleUnitTest.java": {
+    "mtime": 1781859670.0,
+    "ast_hash": "e91b4501c14da821682fa5c26a16d616",
+    "semantic_hash": "e91b4501c14da821682fa5c26a16d616"
+  },
+  "android/build.gradle": {
+    "mtime": 1781859670.0,
+    "ast_hash": "682315a426653617c6a74fc12bef55b6",
+    "semantic_hash": "682315a426653617c6a74fc12bef55b6"
+  },
+  "android/capacitor-cordova-android-plugins/build.gradle": {
+    "mtime": 1783096034.8643906,
+    "ast_hash": "2af61653d70c95d20802c8b5c433ba90",
+    "semantic_hash": "2af61653d70c95d20802c8b5c433ba90"
+  },
+  "android/capacitor-cordova-android-plugins/cordova.variables.gradle": {
+    "mtime": 1783096034.8643906,
+    "ast_hash": "d2372a0ae9aa60abb8d03e7f06bf9194",
+    "semantic_hash": "d2372a0ae9aa60abb8d03e7f06bf9194"
+  },
+  "android/capacitor.settings.gradle": {
+    "mtime": 1783096034.8623908,
+    "ast_hash": "a6e4cdc74af373530b914dd70743fe66",
+    "semantic_hash": "a6e4cdc74af373530b914dd70743fe66"
+  },
+  "android/gradlew": {
+    "mtime": 1781859670.0,
+    "ast_hash": "794669d78aef1dd5c7d889ef618b311a",
+    "semantic_hash": "794669d78aef1dd5c7d889ef618b311a"
+  },
+  "android/settings.gradle": {
+    "mtime": 1781859670.0,
+    "ast_hash": "f6cd925b3f859e23c3d819fe2459e0e4",
+    "semantic_hash": "f6cd925b3f859e23c3d819fe2459e0e4"
+  },
+  "android/variables.gradle": {
+    "mtime": 1781859670.0,
+    "ast_hash": "4b3fce8ea2a515a9d2e47e74757172ec",
+    "semantic_hash": "4b3fce8ea2a515a9d2e47e74757172ec"
+  },
+  "capacitor.config.ts": {
+    "mtime": 1783048877.1193073,
+    "ast_hash": "78be5895dd780cc834de1a348049a2ad",
+    "semantic_hash": "78be5895dd780cc834de1a348049a2ad"
+  },
+  "cypress.config.ts": {
+    "mtime": 1781302547.0,
+    "ast_hash": "5608573cc243d17a81e2e833e9cf5f7e",
+    "semantic_hash": "5608573cc243d17a81e2e833e9cf5f7e"
+  },
+  "cypress/e2e/auth.cy.ts": {
+    "mtime": 1783096137.4034314,
+    "ast_hash": "4298b48377641fad7192470bc09c9f00",
+    "semantic_hash": "4298b48377641fad7192470bc09c9f00"
+  },
+  "cypress/e2e/dashboard.cy.ts": {
+    "mtime": 1783096042.780625,
+    "ast_hash": "c2a09b1a2e8f99080a7d5218cefbca3e",
+    "semantic_hash": "c2a09b1a2e8f99080a7d5218cefbca3e"
+  },
+  "cypress/e2e/tareas.cy.ts": {
+    "mtime": 1783053497.184343,
+    "ast_hash": "24e535957e89b61f0a42d0e7eff5145d",
+    "semantic_hash": "24e535957e89b61f0a42d0e7eff5145d"
+  },
+  "cypress/e2e/test.cy.ts": {
+    "mtime": 1781302547.0,
+    "ast_hash": "d537532b6600ebbb84caa81445cc90e4",
+    "semantic_hash": "d537532b6600ebbb84caa81445cc90e4"
+  },
+  "cypress/fixtures/example.json": {
+    "mtime": 1781302547.0,
+    "ast_hash": "1c0f81b6b542d5bc3972f4a4f97b63d6",
+    "semantic_hash": "1c0f81b6b542d5bc3972f4a4f97b63d6"
+  },
+  "cypress/support/commands.ts": {
+    "mtime": 1781302547.0,
+    "ast_hash": "bd153e3a38e890ea7a3b69c4a43652b7",
+    "semantic_hash": "bd153e3a38e890ea7a3b69c4a43652b7"
+  },
+  "cypress/support/e2e.ts": {
+    "mtime": 1781302547.0,
+    "ast_hash": "7bba757e2efad1ceafb94a37c700b34c",
+    "semantic_hash": "7bba757e2efad1ceafb94a37c700b34c"
+  },
+  "eslint.config.js": {
+    "mtime": 1781302547.0,
+    "ast_hash": "c06ba986816a95a6ad6c078eb24581f3",
+    "semantic_hash": "c06ba986816a95a6ad6c078eb24581f3"
+  },
+  "ionic.config.json": {
+    "mtime": 1783048877.149308,
+    "ast_hash": "5d8af29be370303288a8569ed99da8a7",
+    "semantic_hash": "5d8af29be370303288a8569ed99da8a7"
+  },
+  "package.json": {
+    "mtime": 1783053640.1019235,
+    "ast_hash": "0b53edc0ce79b789925a193032f8e4fb",
+    "semantic_hash": "0b53edc0ce79b789925a193032f8e4fb"
+  },
+  "public/manifest.json": {
+    "mtime": 1781302547.0,
+    "ast_hash": "6f3a0add6e8d4158c2b525c8f6867b57",
+    "semantic_hash": "6f3a0add6e8d4158c2b525c8f6867b57"
+  },
+  "src/App.test.tsx": {
+    "mtime": 1781302547.0,
+    "ast_hash": "6949ee46f7a3ece29f8e4ae57d1df008",
+    "semantic_hash": "6949ee46f7a3ece29f8e4ae57d1df008"
+  },
+  "src/App.tsx": {
+    "mtime": 1783049637.8367994,
+    "ast_hash": "246f76676b572d0df2e73e30c4034ca7",
+    "semantic_hash": "246f76676b572d0df2e73e30c4034ca7"
+  },
+  "src/components/ExploreContainer.tsx": {
+    "mtime": 1781302547.0,
+    "ast_hash": "4c699dc0f0cf08806a328bd54a6ddd0b",
+    "semantic_hash": "4c699dc0f0cf08806a328bd54a6ddd0b"
+  },
+  "src/components/ProtectedRoute.tsx": {
+    "mtime": 1783049596.050205,
+    "ast_hash": "d7087cecb0094afeb5d6ea81cd5503b0",
+    "semantic_hash": "d7087cecb0094afeb5d6ea81cd5503b0"
+  },
+  "src/context/AuthContext.tsx": {
+    "mtime": 1783049586.1710634,
+    "ast_hash": "03dbd1ef24c88175ed125497d9567351",
+    "semantic_hash": "03dbd1ef24c88175ed125497d9567351"
+  },
+  "src/hooks/useAuth.ts": {
+    "mtime": 1783049707.200773,
+    "ast_hash": "8ed449479f7135a5ae25b085c609648d",
+    "semantic_hash": "8ed449479f7135a5ae25b085c609648d"
+  },
+  "src/main.tsx": {
+    "mtime": 1781302547.0,
+    "ast_hash": "11985880b37885035da7a1f49041c8a0",
+    "semantic_hash": "11985880b37885035da7a1f49041c8a0"
+  },
+  "src/pages/Chat.tsx": {
+    "mtime": 1783049629.4536805,
+    "ast_hash": "4ddf4736efcb50caffd9a14c57b9331a",
+    "semantic_hash": "4ddf4736efcb50caffd9a14c57b9331a"
+  },
+  "src/pages/Login.tsx": {
+    "mtime": 1783052300.5880582,
+    "ast_hash": "af418cbc24be17f176debda6cbaef068",
+    "semantic_hash": "af418cbc24be17f176debda6cbaef068"
+  },
+  "src/pages/Tab1.tsx": {
+    "mtime": 1783095887.206029,
+    "ast_hash": "7e397754d50f2ba97156af14ee404dee",
+    "semantic_hash": "7e397754d50f2ba97156af14ee404dee"
+  },
+  "src/pages/Tab2.tsx": {
+    "mtime": 1783052853.3742528,
+    "ast_hash": "f0b7af1bdd1ba18b1a60388251158f38",
+    "semantic_hash": "f0b7af1bdd1ba18b1a60388251158f38"
+  },
+  "src/pages/Tab3.tsx": {
+    "mtime": 1781302547.0,
+    "ast_hash": "19faaa90eb350c240a75c208ae490d89",
+    "semantic_hash": "19faaa90eb350c240a75c208ae490d89"
+  },
+  "src/services/apiConfig.ts": {
+    "mtime": 1783050449.080575,
+    "ast_hash": "1fe494ac4be42b5ce7a71db1027438d1",
+    "semantic_hash": "1fe494ac4be42b5ce7a71db1027438d1"
+  },
+  "src/services/authService.ts": {
+    "mtime": 1783053441.026294,
+    "ast_hash": "aba7f92f151ecc65527e3ed76ff4503a",
+    "semantic_hash": "aba7f92f151ecc65527e3ed76ff4503a"
+  },
+  "src/services/dashboardService.ts": {
+    "mtime": 1783053384.2472095,
+    "ast_hash": "27a630415b3dc40c6e26dda44e0d5a6e",
+    "semantic_hash": "27a630415b3dc40c6e26dda44e0d5a6e"
+  },
+  "src/services/mensajeService.ts": {
+    "mtime": 1783053352.4695911,
+    "ast_hash": "81a1e0f0c222be5f0e7b63bb2f4e5629",
+    "semantic_hash": "81a1e0f0c222be5f0e7b63bb2f4e5629"
+  },
+  "src/services/miembroService.ts": {
+    "mtime": 1783053456.868592,
+    "ast_hash": "643cfd6dfe2a12be8238a740b2fde07d",
+    "semantic_hash": "643cfd6dfe2a12be8238a740b2fde07d"
+  },
+  "src/services/notificacionService.ts": {
+    "mtime": 1783053400.0125132,
+    "ast_hash": "4f78c005a90d7e836d2eab3ccaa7c6a2",
+    "semantic_hash": "4f78c005a90d7e836d2eab3ccaa7c6a2"
+  },
+  "src/services/proyectoService.ts": {
+    "mtime": 1783053325.8070655,
+    "ast_hash": "f5d15fac6144c2a3dce743c5b0a34b80",
+    "semantic_hash": "f5d15fac6144c2a3dce743c5b0a34b80"
+  },
+  "src/services/reporteService.ts": {
+    "mtime": 1783053415.7748148,
+    "ast_hash": "23af0123691d83ae4d99fb6ccc2e1c41",
+    "semantic_hash": "23af0123691d83ae4d99fb6ccc2e1c41"
+  },
+  "src/services/tareaService.ts": {
+    "mtime": 1783053467.8057969,
+    "ast_hash": "82ffc01f6d9489f39acde8fee0c98eb9",
+    "semantic_hash": "82ffc01f6d9489f39acde8fee0c98eb9"
+  },
+  "src/services/usuarioService.ts": {
+    "mtime": 1783053421.4819236,
+    "ast_hash": "aadbfa48b70379517a1e43a1ce14b797",
+    "semantic_hash": "aadbfa48b70379517a1e43a1ce14b797"
+  },
+  "src/setupTests.ts": {
+    "mtime": 1781302547.0,
+    "ast_hash": "a7a5afae432cd90b6dc0d61da561b0ea",
+    "semantic_hash": "a7a5afae432cd90b6dc0d61da561b0ea"
+  },
+  "src/types/auth.ts": {
+    "mtime": 1780114680.9338405,
+    "ast_hash": "4bc3d4e560f96f46197d815b732e0ac4",
+    "semantic_hash": "4bc3d4e560f96f46197d815b732e0ac4"
+  },
+  "src/types/dashboard.ts": {
+    "mtime": 1781888973.773477,
+    "ast_hash": "6ff88ff2835c9fa05bfb933849db3dae",
+    "semantic_hash": "6ff88ff2835c9fa05bfb933849db3dae"
+  },
+  "src/types/mensaje.ts": {
+    "mtime": 1781892601.077727,
+    "ast_hash": "ba396eb1938b499a4c0eeea4ce4bda99",
+    "semantic_hash": "ba396eb1938b499a4c0eeea4ce4bda99"
+  },
+  "src/types/notificacion.ts": {
+    "mtime": 1781891581.5931761,
+    "ast_hash": "612ca5df3d9c5ed3124882a1608518dd",
+    "semantic_hash": "612ca5df3d9c5ed3124882a1608518dd"
+  },
+  "src/types/proyecto.ts": {
+    "mtime": 1780116827.1588805,
+    "ast_hash": "3a77176a57eeea7c5647733ef43155a7",
+    "semantic_hash": "3a77176a57eeea7c5647733ef43155a7"
+  },
+  "src/types/reporte.ts": {
+    "mtime": 1781890598.911737,
+    "ast_hash": "ec3cde7f3bb40fb4bc4d33c76849dc10",
+    "semantic_hash": "ec3cde7f3bb40fb4bc4d33c76849dc10"
+  },
+  "src/types/tarea.ts": {
+    "mtime": 1781282962.3998408,
+    "ast_hash": "319b3e7c962aef755684d6e6ed9a90d6",
+    "semantic_hash": "319b3e7c962aef755684d6e6ed9a90d6"
+  },
+  "src/utils/localDb.ts": {
+    "mtime": 1783053301.1205728,
+    "ast_hash": "b87e9de373ec763087ef853d25a4c259",
+    "semantic_hash": "b87e9de373ec763087ef853d25a4c259"
+  },
+  "src/utils/storage.ts": {
+    "mtime": 1783049582.7420142,
+    "ast_hash": "08b070bb5a5ab8c611d1be4d2b7bc5a3",
+    "semantic_hash": "08b070bb5a5ab8c611d1be4d2b7bc5a3"
+  },
+  "src/vite-env.d.ts": {
+    "mtime": 1781302547.0,
+    "ast_hash": "0352474ba2918efe13895edbc3780d94",
+    "semantic_hash": "0352474ba2918efe13895edbc3780d94"
+  },
+  "tsconfig.json": {
+    "mtime": 1781302547.0,
+    "ast_hash": "ef75e5af92305c996a6d3f448dae89c2",
+    "semantic_hash": "ef75e5af92305c996a6d3f448dae89c2"
+  },
+  "tsconfig.node.json": {
+    "mtime": 1781302547.0,
+    "ast_hash": "42c71f3f9f64d94f8145887b59354846",
+    "semantic_hash": "42c71f3f9f64d94f8145887b59354846"
+  },
+  "vite.config.ts": {
+    "mtime": 1781302547.0,
+    "ast_hash": "b2ac7c2c9aaa48f3940d4876e50b20d7",
+    "semantic_hash": "b2ac7c2c9aaa48f3940d4876e50b20d7"
+  }
+}

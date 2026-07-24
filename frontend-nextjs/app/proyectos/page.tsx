@@ -54,6 +54,7 @@ const FORM_VACIO: FormData = {
   responsable: '',
 };
 
+// RF-02 Gestión de Proyectos: CRUD de proyectos con fechas y responsables.
 export default function ProyectosPage() {
   const { user } = useAuth();
   const esAutorizado = user?.rol === 'ADMIN' || user?.rol === 'LIDER';

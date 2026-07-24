@@ -15,6 +15,16 @@ export default function MiembrosChatPage() {
   const [proyectoActivoId, setProyectoActivoId] = useState<number | undefined>(undefined);
   const [mensajes, setMensajes] = useState<Mensaje[]>([]);
   const [nuevoMensaje, setNuevoMensaje] = useState('');
+  const [myAvatar, setMyAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      const savedAvatar = localStorage.getItem(`ws_user_avatar_${user.id}`);
+      if (savedAvatar) {
+        setMyAvatar(savedAvatar);
+      }
+    }
+  }, [user]);
   
   const [cargandoContactos, setCargandoContactos] = useState(true);
   const [cargandoHistorial, setCargandoHistorial] = useState(false);
@@ -317,7 +327,13 @@ export default function MiembrosChatPage() {
                           <div 
                             key={msg.id} 
                             className={`message-bubble-wrapper ${esEmisor ? 'outgoing' : 'incoming'}`}
+                            style={{ display: 'flex', gap: '8px', alignItems: 'flex-end', margin: '4px 0' }}
                           >
+                            {!esEmisor && (
+                              <div className="avatar-circle" style={{ width: '28px', height: '28px', fontSize: '10px', flexShrink: 0 }}>
+                                {contactoSeleccionado.nombre.substring(0, 2).toUpperCase()}
+                              </div>
+                            )}
                             <div className="bubble">
                               <p className="text">{msg.contenido}</p>
                               <div className="metadata">
@@ -329,6 +345,15 @@ export default function MiembrosChatPage() {
                                 )}
                               </div>
                             </div>
+                            {esEmisor && (
+                              <div className="avatar-circle" style={{ width: '28px', height: '28px', fontSize: '10px', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {myAvatar ? (
+                                  <img src={myAvatar} alt="Yo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                  (user?.username?.[0] ?? 'U').toUpperCase()
+                                )}
+                              </div>
+                            )}
                           </div>
                         );
                       })}
