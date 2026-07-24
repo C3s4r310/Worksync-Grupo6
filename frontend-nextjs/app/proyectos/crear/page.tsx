@@ -178,16 +178,16 @@ export default function CrearProyectoPage() {
             
             {/* Tarjeta de Información General */}
             <div style={{
-              backgroundColor: '#ffffff', borderRadius: '12px', padding: '24px',
-              border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+              backgroundColor: 'var(--bg-white)', borderRadius: '12px', padding: '24px',
+              border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#1e293b', marginBottom: '16px', borderBottom: '1px solid #f1f5f9', paddingBottom: '8px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
                 Datos Generales del Proyecto
               </h2>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div className="ws-field" style={{ margin: 0 }}>
-                  <label style={{ fontWeight: 500, fontSize: '13.5px', color: '#334155' }}>Nombre del Proyecto *</label>
+                  <label style={{ fontWeight: 500, fontSize: '13.5px', color: 'var(--text-primary)' }}>Nombre del Proyecto *</label>
                   <input
                     type="text"
                     value={nombre}
@@ -199,7 +199,7 @@ export default function CrearProyectoPage() {
                 </div>
 
                 <div className="ws-field" style={{ margin: 0 }}>
-                  <label style={{ fontWeight: 500, fontSize: '13.5px', color: '#334155' }}>Descripción</label>
+                  <label style={{ fontWeight: 500, fontSize: '13.5px', color: 'var(--text-primary)' }}>Descripción</label>
                   <textarea
                     value={descripcion}
                     onChange={e => setDescripcion(e.target.value)}
@@ -210,7 +210,7 @@ export default function CrearProyectoPage() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div className="ws-field" style={{ margin: 0 }}>
-                    <label style={{ fontWeight: 500, fontSize: '13.5px', color: '#334155' }}>Fecha de Inicio</label>
+                    <label style={{ fontWeight: 500, fontSize: '13.5px', color: 'var(--text-primary)' }}>Fecha de Inicio</label>
                     <input
                       type="date"
                       value={fechaInicio}
@@ -220,7 +220,7 @@ export default function CrearProyectoPage() {
                   </div>
 
                   <div className="ws-field" style={{ margin: 0 }}>
-                    <label style={{ fontWeight: 500, fontSize: '13.5px', color: '#334155' }}>Fecha de Término</label>
+                    <label style={{ fontWeight: 500, fontSize: '13.5px', color: 'var(--text-primary)' }}>Fecha de Término</label>
                     <input
                       type="date"
                       value={fechaFin}
@@ -232,7 +232,7 @@ export default function CrearProyectoPage() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div className="ws-field" style={{ margin: 0 }}>
-                    <label style={{ fontWeight: 500, fontSize: '13.5px', color: '#334155' }}>Responsable del Proyecto</label>
+                    <label style={{ fontWeight: 500, fontSize: '13.5px', color: 'var(--text-primary)' }}>Responsable del Proyecto</label>
                     <select
                       value={responsable}
                       onChange={e => setResponsable(e.target.value)}
@@ -248,7 +248,7 @@ export default function CrearProyectoPage() {
                   </div>
 
                   <div className="ws-field" style={{ margin: 0 }}>
-                    <label style={{ fontWeight: 500, fontSize: '13.5px', color: '#334155' }}>Prioridad</label>
+                    <label style={{ fontWeight: 500, fontSize: '13.5px', color: 'var(--text-primary)' }}>Prioridad</label>
                     <select
                       value={prioridad}
                       onChange={e => setPrioridad(e.target.value)}
@@ -262,7 +262,7 @@ export default function CrearProyectoPage() {
                 </div>
 
                 <div className="ws-field" style={{ margin: 0 }}>
-                  <label style={{ fontWeight: 500, fontSize: '13.5px', color: '#334155' }}>Estado Inicial</label>
+                  <label style={{ fontWeight: 500, fontSize: '13.5px', color: 'var(--text-primary)' }}>Estado Inicial</label>
                   <select
                     value={estado}
                     onChange={e => setEstado(e.target.value)}
@@ -278,27 +278,27 @@ export default function CrearProyectoPage() {
 
             {/* Tarjeta de Miembros Participantes */}
             <div style={{
-              backgroundColor: '#ffffff', borderRadius: '12px', padding: '24px',
-              border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+              backgroundColor: 'var(--bg-white)', borderRadius: '12px', padding: '24px',
+              border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#1e293b', marginBottom: '8px', paddingBottom: '8px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px', paddingBottom: '8px' }}>
                 Miembros Participantes (RF-02)
               </h2>
-              <p style={{ fontSize: '12.5px', color: '#64748b', marginBottom: '16px' }}>
+              <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
                 Selecciona los miembros que participarán en el proyecto y asígnales su rol dentro del mismo.
               </p>
 
               {cargandoUsuarios ? (
-                <div style={{ padding: '12px', textAlign: 'center', color: '#64748b', fontSize: '14px' }}>
+                <div style={{ padding: '12px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '14px' }}>
                   Cargando usuarios del sistema...
                 </div>
               ) : usuariosSistema.length === 0 ? (
-                <div style={{ padding: '12px', textAlign: 'center', color: '#64748b', fontSize: '14px' }}>
+                <div style={{ padding: '12px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '14px' }}>
                   No se encontraron usuarios registrados en el sistema.
                 </div>
               ) : (
                 <div style={{
-                  maxHeight: '240px', overflowY: 'auto', border: '1px solid #e2e8f0',
+                  maxHeight: '240px', overflowY: 'auto', border: '1px solid var(--border)',
                   borderRadius: '8px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px'
                 }}>
                   {usuariosSistema.map(u => {
@@ -311,9 +311,9 @@ export default function CrearProyectoPage() {
                         style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                           padding: '8px 12px', borderRadius: '6px', 
-                          backgroundColor: isSelected ? '#f1f5f9' : 'transparent',
+                          backgroundColor: isSelected ? 'var(--accent-light)' : 'transparent',
                           transition: 'background-color 0.2s',
-                          borderBottom: '1px solid #f8fafc'
+                          borderBottom: '1px solid var(--border)'
                         }}
                       >
                         <label style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, cursor: 'pointer' }}>
@@ -324,14 +324,14 @@ export default function CrearProyectoPage() {
                             style={{ width: '16px', height: '16px' }}
                           />
                           <div>
-                            <div style={{ fontSize: '13.5px', fontWeight: 550, color: '#334155' }}>{u.nombre}</div>
-                            <div style={{ fontSize: '11px', color: '#64748b' }}>{u.correo} | Rol Sistema: {u.rol}</div>
+                            <div style={{ fontSize: '13.5px', fontWeight: 550, color: 'var(--text-primary)' }}>{u.nombre}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{u.correo} | Rol Sistema: {u.rol}</div>
                           </div>
                         </label>
 
                         {isSelected && (
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ fontSize: '11px', color: '#475569', fontWeight: 500 }}>Rol Proyecto:</span>
+                            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Rol Proyecto:</span>
                             <select
                               value={miembro.rol}
                               onChange={e => cambiarRolMiembro(u.id, e.target.value as 'COLABORADOR' | 'LIDER')}
